@@ -1,7 +1,7 @@
 {
     "name": "cobby/webhook-plugin",
     "description": "Shopware 6 Plugin for Queue-Only Architecture - Tracks entity changes in queue for Cobby Automate",
-    "version": "1.0.0",
+    "version": "1.0.49",
     "type": "shopware-platform-plugin",
     "license": "MIT",
     "authors": [

@@ -17,8 +17,12 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
  * errors. Native curl with CURLOPT_NOSIGNAL=1 and proper timeouts proved more
  * reliable in containerized environments.
  *
+ * URL SCHEMA:
+ * All webhooks are sent to: baseUrl/workspaces/{workspaceId}/shopware/extension/webhook
+ *
  * CONFIGURATION:
- * - webhookUrl: Target endpoint (default: https://automate.cobby.io/webhook/shopware/plugin-event)
+ * - baseUrl: API base URL (default: https://automate.cobby.io)
+ * - workspaceId: Workspace identifier (set via API)
  * - enableDebugLogging: Detailed logging
  */
 class NotificationService
@@ -39,9 +43,38 @@ class NotificationService
         $this->systemConfigService = $systemConfigService;
     }
 
-    private function getWebhookUrl(): string
+    private function getBaseUrl(): ?string
     {
-        return $this->systemConfigService->get(CobbyShopware6Extension::CONFIG_PREFIX . 'webhookUrl');
+        return $this->systemConfigService->get(CobbyShopware6Extension::CONFIG_PREFIX . 'baseUrl');
+    }
+
+    private function getWorkspaceId(): ?string
+    {
+        return $this->systemConfigService->get(CobbyShopware6Extension::CONFIG_PREFIX . 'workspaceId');
+    }
+
+    /**
+     * Builds the full webhook URL with workspaceId in path.
+     * Schema: baseUrl/workspaces/{workspaceId}/shopware/extension/webhook
+     */
+    private function buildExtensionUrl(): ?string
+    {
+        $baseUrl = $this->getBaseUrl();
+        $workspaceId = $this->getWorkspaceId();
+
+        if (empty($baseUrl) || empty($workspaceId)) {
+            return null;
+        }
+
+        return rtrim($baseUrl, '/') . '/workspaces/' . $workspaceId . '/shopware/extension';
+    }
+
+    private function buildWebhookUrl(): ?string
+    {
+        $extensionUrl = $this->buildExtensionUrl();
+        if (empty($extensionUrl)) return null;
+
+        return $extensionUrl . '/webhook';
     }
 
     private function isDebugLoggingEnabled(): bool
@@ -64,7 +97,7 @@ class NotificationService
         string $url = null,
         int $timeout = null
     ): array {
-        $webhookUrl = $url ?: $this->getWebhookUrl();
+        $webhookUrl = $url ?: $this->buildWebhookUrl();
         $webhookTimeout = $timeout ?: self::DEFAULT_TIMEOUT;
 
         if (empty($webhookUrl)) {
@@ -175,8 +208,38 @@ class NotificationService
             $this->logger->error('Failed to send webhook', [
                 'event' => $eventName,
                 'error' => $result['error'],
-                'url' => $this->getWebhookUrl(),
+                'url' => $this->buildWebhookUrl(),
             ]);
         }
+    }
+
+    /**
+     * Sends a plugin lifecycle status notification.
+     *
+     * @param string $status Lifecycle status (installed, uninstalled, activated, deactivated)
+     * @return array ['success' => bool, 'http_status' => int|null, 'response' => string|null, 'error' => string|null]
+     */
+    public function sendStatusNotification(string $status): array
+    {
+        $webhookUrl = $this->buildExtensionUrl();
+
+        if (empty($webhookUrl)) {
+            $this->logger->info('Cannot send status notification: baseUrl or workspaceId not configured', ['status' => $status]);
+            return [
+                'success' => false,
+                'error' => 'baseUrl or workspaceId not configured',
+                'http_status' => null,
+                'response' => null
+            ];
+        }
+
+        $data = [
+            'status' => $status,
+            'shopUrl' => $this->getSafeHttpHost(),
+            'pluginVersion' => CobbyShopware6Extension::PLUGIN_VERSION,
+            'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
+        ];
+
+        return $this->sendWebhookWithResponse('plugin.lifecycle', $data, $webhookUrl);
     }
 }
