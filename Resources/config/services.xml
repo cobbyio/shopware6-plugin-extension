@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Enable autowiring and autoconfiguration for all services -->
+        <defaults autowire="true" autoconfigure="true"/>
+
+        <!-- ========================================
+             SERVICES
+             ======================================== -->
+
+        <!-- Queue Service (Metadata-Only Architecture) -->
+        <service id="CobbyShopware6Extension\Service\QueueTableService">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="monolog.logger"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <!-- Notification Service (Webhook delivery) -->
+        <service id="CobbyShopware6Extension\Service\NotificationService">
+            <argument type="service" id="monolog.logger"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <!-- ========================================
+             CONTROLLERS (must be public)
+             ======================================== -->
+
+        <!-- Queue Controller (API endpoints for queue management) -->
+        <service id="CobbyShopware6Extension\Controller\QueueTableController" public="true">
+            <argument type="service" id="CobbyShopware6Extension\Service\QueueTableService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <tag name="controller.service_arguments"/>
+        </service>
+
+        <!-- ========================================
+             EVENT SUBSCRIBERS (auto-registered via prototype)
+             ======================================== -->
+
+        <!-- All subscribers in the Subscriber/ directory are automatically registered
+             as event subscribers with all required dependencies injected via constructor.
+
+             Dependencies (autowired):
+             - CobbyShopware6Extension\Service\QueueTableService
+             - CobbyShopware6Extension\Service\NotificationService
+             - Psr\Log\LoggerInterface (monolog.logger)
+             - Shopware\Core\System\SystemConfig\SystemConfigService
+
+             Covered subscribers (12 total):
+             - PropertyGroupSubscriber (4 events)
+             - ProductSubscriber (8 events)
+             - CategorySubscriber (2 events)
+             - TaxSubscriber (2 events)
+             - CurrencySubscriber (2 events)
+             - ManufacturerSubscriber (2 events)
+             - SalesChannelSubscriber (2 events)
+             - RuleSubscriber (2 events)
+             - UnitSubscriber (2 events)
+             - DeliveryTimeSubscriber (2 events)
+             - TagSubscriber (2 events)
+        -->
+        <prototype namespace="CobbyShopware6Extension\Subscriber\" resource="../../src/Subscriber/*Subscriber.php">
+            <tag name="kernel.event_subscriber"/>
+        </prototype>
+    </services>
+</container>

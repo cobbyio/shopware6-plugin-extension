@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <!--
+        Hidden Configuration Fields (not displayed in admin):
+        - workspaceId: Unique workspace identifier, set via API endpoint POST /api/_action/cobby/workspace
+                       Stored as: CobbyShopware6Extension.config.workspaceId
+        - cobbyIntegrationId: Cobby integration UUID, auto-loaded from integration table (label='cobby')
+                              Stored as: CobbyShopware6Extension.config.cobbyIntegrationId
+    -->
+
+    <card>
+        <title>cobby Configuration</title>
+        <title lang="de-DE">cobby Konfiguration</title>
+
+        <input-field type="text">
+            <name>webhookUrl</name>
+            <label>Webhook URL</label>
+            <label lang="de-DE">Webhook URL</label>
+            <placeholder>https://automate.cobby.io/webhook/shopware/plugin-event</placeholder>
+            <defaultValue>https://automate.cobby.io/webhook/shopware/plugin-event</defaultValue>
+            <helpText>The URL where all webhooks will be sent (entity changes and notifications)</helpText>
+            <helpText lang="de-DE">Die URL an die alle Webhooks gesendet werden (Entity-Änderungen und Benachrichtigungen)</helpText>
+        </input-field>
+
+        <input-field type="text">
+            <name>cobbyIntegrationId</name>
+            <label>Cobby Integration ID (Auto-Detected)</label>
+            <label lang="de-DE">Cobby Integration ID (Automatisch erkannt)</label>
+            <placeholder>Auto-loaded from database...</placeholder>
+            <helpText>Automatically loaded from integration table (label='cobby'). Cache will be set after first request.</helpText>
+            <helpText lang="de-DE">Automatisch aus der integration Tabelle geladen (label='cobby'). Cache wird nach erstem Request gesetzt.</helpText>
+            <disabled>true</disabled>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enablePropertyGroupEvents</name>
+            <label>Enable Property Group Events</label>
+            <label lang="de-DE">Property Group Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track property group changes in queue</helpText>
+            <helpText lang="de-DE">Property Group Änderungen in Queue erfassen</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableProductEvents</name>
+            <label>Enable Product Events</label>
+            <label lang="de-DE">Produkt-Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track product changes in queue (created, updated, deleted, media, prices, categories)</helpText>
+            <helpText lang="de-DE">Produkt-Änderungen in Queue erfassen (erstellt, aktualisiert, gelöscht, Medien, Preise, Kategorien)</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableCategoryEvents</name>
+            <label>Enable Category Events</label>
+            <label lang="de-DE">Kategorie-Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track category changes in queue (created, updated, deleted)</helpText>
+            <helpText lang="de-DE">Kategorie-Änderungen in Queue erfassen (erstellt, aktualisiert, gelöscht)</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableTaxEvents</name>
+            <label>Enable Tax Events</label>
+            <label lang="de-DE">Steuer-Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track tax changes in queue (created, updated, deleted)</helpText>
+            <helpText lang="de-DE">Steuer-Änderungen in Queue erfassen (erstellt, aktualisiert, gelöscht)</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableCurrencyEvents</name>
+            <label>Enable Currency Events</label>
+            <label lang="de-DE">Währungs-Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track currency changes in queue (created, updated, deleted)</helpText>
+            <helpText lang="de-DE">Währungs-Änderungen in Queue erfassen (erstellt, aktualisiert, gelöscht)</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableManufacturerEvents</name>
+            <label>Enable Manufacturer Events</label>
+            <label lang="de-DE">Hersteller-Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track manufacturer/brand changes in queue (created, updated, deleted)</helpText>
+            <helpText lang="de-DE">Hersteller/Marken-Änderungen in Queue erfassen (erstellt, aktualisiert, gelöscht)</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableSalesChannelEvents</name>
+            <label>Enable Sales Channel Events</label>
+            <label lang="de-DE">Verkaufskanal-Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track sales channel changes in queue (created, updated, deleted)</helpText>
+            <helpText lang="de-DE">Verkaufskanal-Änderungen in Queue erfassen (erstellt, aktualisiert, gelöscht)</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableRuleEvents</name>
+            <label>Enable Rule Events</label>
+            <label lang="de-DE">Regel-Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track business rule changes in queue (created, updated, deleted)</helpText>
+            <helpText lang="de-DE">Geschäftsregel-Änderungen in Queue erfassen (erstellt, aktualisiert, gelöscht)</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableUnitEvents</name>
+            <label>Enable Unit Events</label>
+            <label lang="de-DE">Einheit-Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track measurement unit changes in queue (created, updated, deleted)</helpText>
+            <helpText lang="de-DE">Maßeinheit-Änderungen in Queue erfassen (erstellt, aktualisiert, gelöscht)</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableDeliveryTimeEvents</name>
+            <label>Enable Delivery Time Events</label>
+            <label lang="de-DE">Lieferzeit-Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track delivery time changes in queue (created, updated, deleted)</helpText>
+            <helpText lang="de-DE">Lieferzeit-Änderungen in Queue erfassen (erstellt, aktualisiert, gelöscht)</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableTagEvents</name>
+            <label>Enable Tag Events</label>
+            <label lang="de-DE">Tag-Events aktivieren</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Track tag changes in queue (created, updated, deleted)</helpText>
+            <helpText lang="de-DE">Tag-Änderungen in Queue erfassen (erstellt, aktualisiert, gelöscht)</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableDebugLogging</name>
+            <label>Enable Debug Logging</label>
+            <label lang="de-DE">Debug-Logging aktivieren</label>
+            <defaultValue>false</defaultValue>
+            <helpText>Log detailed information about queue and notification events</helpText>
+            <helpText lang="de-DE">Detaillierte Informationen über Queue- und Notification-Events loggen</helpText>
+        </input-field>
+    </card>
+</config>
