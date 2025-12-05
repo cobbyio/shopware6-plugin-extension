@@ -84,17 +84,17 @@ The plugin fetches comprehensive data for all entities with deep associations:
 ### Via Docker Compose (Development)
 ```yaml
 volumes:
-  - ./shopware6-extension/CobbyShopware6Extension:/var/www/html/custom/plugins/CobbyShopware6Extension
+  - ./shopware6-extension/Cobby:/var/www/html/custom/plugins/Cobby
 ```
 
 ### Manual Installation
 ```bash
 # Copy plugin to Shopware
-cp -r CobbyShopware6Extension /var/www/html/custom/plugins/
+cp -r Cobby /var/www/html/custom/plugins/
 
 # Install and activate
 bin/console plugin:refresh
-bin/console plugin:install CobbyShopware6Extension --activate
+bin/console plugin:install Cobby --activate
 bin/console cache:clear
 ```
 

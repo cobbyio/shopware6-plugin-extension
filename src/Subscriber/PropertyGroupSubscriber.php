@@ -2,7 +2,7 @@
 
 namespace CobbyShopware6Extension\Subscriber;
 
-use CobbyShopware6Extension\CobbyShopware6Extension;
+use CobbyShopware6Extension\CobbyPlugin;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityDeletedEvent;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityWrittenEvent;
 
@@ -32,7 +32,7 @@ class PropertyGroupSubscriber extends AbstractWebhookSubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyShopware6Extension::CONFIG_PREFIX . 'enablePropertyGroupEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enablePropertyGroupEvents';
     }
 
     public function onPropertyGroupWritten(EntityWrittenEvent $event): void

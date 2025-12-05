@@ -267,12 +267,12 @@ class ProductSubscriberTest extends TestCase
 **1. Check Plugin Status**
 ```bash
 bin/console plugin:list | grep CobbyWebhook
-# Should show: CobbyShopware6Extension | installed, active
+# Should show: Cobby | installed, active
 ```
 
 **2. Check Configuration**
 ```bash
-bin/console system:config:get CobbyShopware6Extension.config
+bin/console system:config:get Cobby.config
 ```
 
 Verify:
@@ -403,7 +403,7 @@ class CustomSubscriber extends AbstractWebhookSubscriber
     }
 
     protected function getConfigKey(): string {
-        return 'CobbyShopware6Extension.config.enableCustomEvents';
+        return 'Cobby.config.enableCustomEvents';
     }
 
     protected function extractEntityData($entity): array {

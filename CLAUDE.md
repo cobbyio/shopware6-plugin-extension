@@ -11,7 +11,7 @@ This is a Shopware 6 plugin (`CobbyShopware6Extension`) that extends Shopware's 
 ### Plugin Management
 ```bash
 # Install and activate the plugin
-bin/console plugin:install CobbyShopware6Extension --activate
+bin/console plugin:install Cobby --activate
 
 # Refresh plugin list
 bin/console plugin:refresh
@@ -172,7 +172,7 @@ class CustomSubscriber extends AbstractWebhookSubscriber
     private const CUSTOM_ASSOCIATIONS = ['translations', 'media'];
 
     protected function getConfigKey(): string {
-        return 'CobbyShopware6Extension.config.enableCustomEvents';
+        return 'Cobby.config.enableCustomEvents';
     }
 
     protected function extractEntityData($entity): array {

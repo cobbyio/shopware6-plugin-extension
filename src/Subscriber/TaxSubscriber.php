@@ -2,7 +2,7 @@
 
 namespace CobbyShopware6Extension\Subscriber;
 
-use CobbyShopware6Extension\CobbyShopware6Extension;
+use CobbyShopware6Extension\CobbyPlugin;
 
 class TaxSubscriber extends SimpleEntitySubscriber
 {
@@ -13,6 +13,6 @@ class TaxSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyShopware6Extension::CONFIG_PREFIX . 'enableTaxEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableTaxEvents';
     }
 }

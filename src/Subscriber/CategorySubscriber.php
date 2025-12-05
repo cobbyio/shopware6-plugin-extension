@@ -2,7 +2,7 @@
 
 namespace CobbyShopware6Extension\Subscriber;
 
-use CobbyShopware6Extension\CobbyShopware6Extension;
+use CobbyShopware6Extension\CobbyPlugin;
 
 /**
  * Category event subscriber for category tracking (Metadata-Only).
@@ -19,6 +19,6 @@ class CategorySubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyShopware6Extension::CONFIG_PREFIX . 'enableCategoryEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableCategoryEvents';
     }
 }

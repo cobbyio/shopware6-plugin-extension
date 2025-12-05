@@ -199,7 +199,7 @@ public function __construct(...) {
 
 // ✅ NEW (v0.4.0-beta): Config loaded on-demand
 private function getWebhookUrl(): string {
-    return $this->systemConfigService->get('CobbyShopware6Extension.config.webhookUrl')
+    return $this->systemConfigService->get('Cobby.config.webhookUrl')
         ?? self::DEFAULT_WEBHOOK_URL;
 }
 ```
@@ -328,7 +328,7 @@ $this->connection->insert('cobby_queue', [
 **Abstract Methods** (must be implemented by child classes):
 ```php
 abstract protected function getConfigKey(): string;
-// Returns: 'CobbyShopware6Extension.config.enablePropertyGroupEvents'
+// Returns: 'Cobby.config.enablePropertyGroupEvents'
 
 abstract protected function extractEntityData($entity): array;
 // Converts entity object to array for webhook payload
@@ -426,7 +426,7 @@ public static function getSubscribedEvents(): array {
 **Config Key**:
 ```php
 protected function getConfigKey(): string {
-    return 'CobbyShopware6Extension.config.enablePropertyGroupEvents';
+    return 'Cobby.config.enablePropertyGroupEvents';
 }
 ```
 
@@ -842,7 +842,7 @@ class WebhookService {
 
     public function __construct(SystemConfigService $config) {
         // ❌ Config loaded once at service instantiation
-        $this->webhookUrl = $config->get('CobbyShopware6Extension.config.webhookUrl');
+        $this->webhookUrl = $config->get('Cobby.config.webhookUrl');
         // Problem: Changes require cache clear!
     }
 }
@@ -859,7 +859,7 @@ class WebhookService {
 
     private function getWebhookUrl(): string {
         // ✅ Config loaded fresh on each call
-        return $this->systemConfigService->get('CobbyShopware6Extension.config.webhookUrl')
+        return $this->systemConfigService->get('Cobby.config.webhookUrl')
             ?? self::DEFAULT_WEBHOOK_URL;
     }
 }
@@ -1148,7 +1148,7 @@ class CustomerSubscriber extends AbstractWebhookSubscriber
     }
 
     protected function getConfigKey(): string {
-        return 'CobbyShopware6Extension.config.enableCustomerEvents';
+        return 'Cobby.config.enableCustomerEvents';
     }
 
     protected function extractEntityData($entity): array {

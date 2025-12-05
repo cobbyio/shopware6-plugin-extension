@@ -46,8 +46,8 @@
              as event subscribers with all required dependencies injected via constructor.
 
              Dependencies (autowired):
-             - CobbyShopware6Extension\Service\QueueTableService
-             - CobbyShopware6Extension\Service\NotificationService
+             - Cobby\Service\QueueTableService
+             - Cobby\Service\NotificationService
              - Psr\Log\LoggerInterface (monolog.logger)
              - Shopware\Core\System\SystemConfig\SystemConfigService
 

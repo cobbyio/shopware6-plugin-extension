@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Doctrine\DBAL\Connection;
 
-class CobbyShopware6Extension extends Plugin
+class CobbyPlugin extends Plugin
 {
     public const string PLUGIN_VERSION = '1.0.49';
     public const string CONFIG_PREFIX = 'cobby.config.';
@@ -153,7 +153,7 @@ class CobbyShopware6Extension extends Plugin
             $notificationService->sendStatusNotification($status);
         } catch (\Throwable $e) {
             // Log error for debugging - lifecycle should not fail due to notification errors
-            error_log('CobbyShopware6Extension lifecycle notification failed: ' . $e->getMessage());
+            error_log('Cobby lifecycle notification failed: ' . $e->getMessage());
         }
     }
 }

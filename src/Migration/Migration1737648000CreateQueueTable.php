@@ -17,7 +17,7 @@ use Shopware\Core\Framework\Migration\MigrationStep;
  * - Small database footprint
  * - Always current data (loaded live from Shopware)
  *
- *  CobbyShopware6Extension\Migration
+ *  Cobby\Migration
  */
 class Migration1737648000CreateQueueTable extends MigrationStep
 {

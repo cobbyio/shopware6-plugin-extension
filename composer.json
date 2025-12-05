@@ -13,7 +13,7 @@
         "shopware/core": "^6.4"
     },
     "extra": {
-        "shopware-plugin-class": "CobbyShopware6Extension\\CobbyShopware6Extension",
+        "shopware-plugin-class": "CobbyShopware6Extension\\CobbyPlugin",
         "plugin-icon": "src/Resources/config/plugin.png",
         "label": {
             "de-DE": "cobby",

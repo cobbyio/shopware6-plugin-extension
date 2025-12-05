@@ -2,7 +2,7 @@
 
 namespace CobbyShopware6Extension\Service;
 
-use CobbyShopware6Extension\CobbyShopware6Extension;
+use CobbyShopware6Extension\CobbyPlugin;
 use CobbyShopware6Extension\Exception\WebhookException;
 use CobbyShopware6Extension\Util\SecurityTrait;
 use Psr\Log\LoggerInterface;
@@ -18,11 +18,11 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
  * reliable in containerized environments.
  *
  * URL SCHEMA:
- * All webhooks are sent to: baseUrl/workspaces/{workspaceId}/shopware/extension/webhook
+ * - Status notifications: baseUrl (full path including workspace)
+ * - Webhooks: baseUrl/webhook
  *
  * CONFIGURATION:
- * - baseUrl: API base URL (default: https://automate.cobby.io)
- * - workspaceId: Workspace identifier (set via API)
+ * - baseUrl: Full extension URL (e.g., https://automate.cobby.io/workspaces/{id}/shopware/extension)
  * - enableDebugLogging: Detailed logging
  */
 class NotificationService
@@ -45,28 +45,21 @@ class NotificationService
 
     private function getBaseUrl(): ?string
     {
-        return $this->systemConfigService->get(CobbyShopware6Extension::CONFIG_PREFIX . 'baseUrl');
-    }
-
-    private function getWorkspaceId(): ?string
-    {
-        return $this->systemConfigService->get(CobbyShopware6Extension::CONFIG_PREFIX . 'workspaceId');
+        return $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX . 'baseUrl');
     }
 
     /**
-     * Builds the full webhook URL with workspaceId in path.
-     * Schema: baseUrl/workspaces/{workspaceId}/shopware/extension/webhook
+     * Returns the extension URL (baseUrl already contains full path).
      */
     private function buildExtensionUrl(): ?string
     {
         $baseUrl = $this->getBaseUrl();
-        $workspaceId = $this->getWorkspaceId();
 
-        if (empty($baseUrl) || empty($workspaceId)) {
+        if (empty($baseUrl)) {
             return null;
         }
 
-        return rtrim($baseUrl, '/') . '/workspaces/' . $workspaceId . '/shopware/extension';
+        return rtrim($baseUrl, '/');
     }
 
     private function buildWebhookUrl(): ?string
@@ -79,7 +72,7 @@ class NotificationService
 
     private function isDebugLoggingEnabled(): bool
     {
-        return (bool) $this->systemConfigService->get(CobbyShopware6Extension::CONFIG_PREFIX . 'enableDebugLogging');
+        return (bool) $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX . 'enableDebugLogging');
     }
 
     /**
@@ -224,10 +217,10 @@ class NotificationService
         $webhookUrl = $this->buildExtensionUrl();
 
         if (empty($webhookUrl)) {
-            $this->logger->info('Cannot send status notification: baseUrl or workspaceId not configured', ['status' => $status]);
+            $this->logger->info('Cannot send status notification: baseUrl not configured', ['status' => $status]);
             return [
                 'success' => false,
-                'error' => 'baseUrl or workspaceId not configured',
+                'error' => 'baseUrl not configured',
                 'http_status' => null,
                 'response' => null
             ];
@@ -236,7 +229,7 @@ class NotificationService
         $data = [
             'status' => $status,
             'shopUrl' => $this->getSafeHttpHost(),
-            'pluginVersion' => CobbyShopware6Extension::PLUGIN_VERSION,
+            'pluginVersion' => CobbyPlugin::PLUGIN_VERSION,
             'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
         ];
 

@@ -2,7 +2,7 @@
 
 namespace CobbyShopware6Extension\Subscriber;
 
-use CobbyShopware6Extension\CobbyShopware6Extension;
+use CobbyShopware6Extension\CobbyPlugin;
 
 class ManufacturerSubscriber extends SimpleEntitySubscriber
 {
@@ -18,6 +18,6 @@ class ManufacturerSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyShopware6Extension::CONFIG_PREFIX . 'enableManufacturerEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableManufacturerEvents';
     }
 }

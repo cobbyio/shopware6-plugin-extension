@@ -2,7 +2,7 @@
 
 namespace CobbyShopware6Extension\Service;
 
-use CobbyShopware6Extension\CobbyShopware6Extension;
+use CobbyShopware6Extension\CobbyPlugin;
 use CobbyShopware6Extension\Exception\QueueException;
 use CobbyShopware6Extension\Util\SecurityTrait;
 use Doctrine\DBAL\Connection;
@@ -25,13 +25,13 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
  * - External service loads data on-demand
  * - Always current data (not stale JSON)
  *
- *  CobbyShopware6Extension\Service
+ *  Cobby\Service
  */
 class QueueTableService
 {
     use SecurityTrait;
 
-    private const CONFIG_WORKSPACE_ID = CobbyShopware6Extension::CONFIG_PREFIX . 'workspaceId';
+    private const CONFIG_WORKSPACE_ID = CobbyPlugin::CONFIG_PREFIX . 'workspaceId';
 
     public function __construct(
         private readonly Connection $connection,
@@ -131,7 +131,7 @@ class QueueTableService
     public function getCobbyIntegrationId(): ?string
     {
         // Check cache first
-        $cached = $this->systemConfigService->get(CobbyShopware6Extension::CONFIG_PREFIX . 'cobbyIntegrationId');
+        $cached = $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX . 'cobbyIntegrationId');
         if ($cached) {
             return $cached;
         }
@@ -145,7 +145,7 @@ class QueueTableService
 
             if ($result) {
                 // Cache for future requests
-                $this->systemConfigService->set(CobbyShopware6Extension::CONFIG_PREFIX . 'cobbyIntegrationId', $result);
+                $this->systemConfigService->set(CobbyPlugin::CONFIG_PREFIX . 'cobbyIntegrationId', $result);
                 $this->logger->info('Cobby integration ID loaded and cached', ['integration_id' => $result]);
                 return $result;
             }

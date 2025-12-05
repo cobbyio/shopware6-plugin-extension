@@ -329,7 +329,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 1. **Database Migration Required**
    ```bash
-   bin/console database:migrate CobbyShopware6Extension --all
+   bin/console database:migrate Cobby --all
    ```
 
 2. **Configuration Changes**

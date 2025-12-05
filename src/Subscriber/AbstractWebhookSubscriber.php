@@ -2,7 +2,7 @@
 
 namespace CobbyShopware6Extension\Subscriber;
 
-use CobbyShopware6Extension\CobbyShopware6Extension;
+use CobbyShopware6Extension\CobbyPlugin;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use CobbyShopware6Extension\Service\QueueTableService;
 use CobbyShopware6Extension\Service\NotificationService;
@@ -32,7 +32,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityDeletedEvent;
  * - Queue management with full entity data
  * - Notification service integration
  *
- *  CobbyShopware6Extension\Subscriber
+ *  Cobby\Subscriber
  */
 abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
 {
@@ -47,7 +47,7 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
 
     /**
      * Get the config key for enabling/disabling this subscriber's events.
-     * Example: 'CobbyShopware6Extension.config.enableProductEvents'
+     * Example: 'Cobby.config.enableProductEvents'
      */
     abstract protected function getConfigKey(): string;
 
@@ -166,7 +166,7 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
                 $eventName = $entityType . '.' . $eventSuffix;
 
                 // Get workspace identification
-                $workspaceId = $this->systemConfigService->get(CobbyShopware6Extension::CONFIG_PREFIX . 'workspaceId');
+                $workspaceId = $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX . 'workspaceId');
                 $shopUrl = $this->getSafeHttpHost();
 
                 // Build lightweight notification payload
@@ -179,7 +179,7 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
                     'operation' => $operation,
                     'queueId' => $queueId,
                     'timestamp' => time(),
-                    'pluginVersion' => CobbyShopware6Extension::PLUGIN_VERSION,
+                    'pluginVersion' => CobbyPlugin::PLUGIN_VERSION,
                 ];
 
                 $this->notificationService->sendWebhook($eventName, $payload);

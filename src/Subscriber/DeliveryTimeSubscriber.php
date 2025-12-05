@@ -2,7 +2,7 @@
 
 namespace CobbyShopware6Extension\Subscriber;
 
-use CobbyShopware6Extension\CobbyShopware6Extension;
+use CobbyShopware6Extension\CobbyPlugin;
 
 /**
  * Delivery Time event subscriber for shipping timeframe tracking (Metadata-Only).
@@ -19,6 +19,6 @@ class DeliveryTimeSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyShopware6Extension::CONFIG_PREFIX . 'enableDeliveryTimeEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableDeliveryTimeEvents';
     }
 }

@@ -2,7 +2,7 @@
 
 namespace CobbyShopware6Extension\Subscriber;
 
-use CobbyShopware6Extension\CobbyShopware6Extension;
+use CobbyShopware6Extension\CobbyPlugin;
 
 /**
  * Tag event subscriber for tag tracking (Metadata-Only).
@@ -24,6 +24,6 @@ class TagSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyShopware6Extension::CONFIG_PREFIX . 'enableTagEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableTagEvents';
     }
 }

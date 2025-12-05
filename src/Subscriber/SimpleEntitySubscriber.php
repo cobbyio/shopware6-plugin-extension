@@ -21,7 +21,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityWrittenEvent;
  * {
  *     protected function getEntityType(): string { return 'tax'; }
  *     protected function getConfigKey(): string {
- *         return CobbyShopware6Extension::CONFIG_PREFIX . 'enableTaxEvents';
+ *         return Cobby::CONFIG_PREFIX . 'enableTaxEvents';
  *     }
  * }
  * ```
