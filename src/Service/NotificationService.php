@@ -1,10 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace CobbyShopware6Extension\Service;
+namespace CobbyPlugin\Service;
 
-use CobbyShopware6Extension\CobbyPlugin;
-use CobbyShopware6Extension\Exception\WebhookException;
-use CobbyShopware6Extension\Util\SecurityTrait;
+use CobbyPlugin\CobbyPlugin;
+use CobbyPlugin\Util\SecurityTrait;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 

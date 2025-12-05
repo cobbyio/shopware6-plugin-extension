@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace CobbyShopware6Extension\Subscriber;
+namespace CobbyPlugin\Subscriber;
 
-use CobbyShopware6Extension\CobbyPlugin;
+use CobbyPlugin\CobbyPlugin;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use CobbyShopware6Extension\Service\QueueTableService;
-use CobbyShopware6Extension\Service\NotificationService;
-use CobbyShopware6Extension\Util\SecurityTrait;
+use CobbyPlugin\Service\QueueTableService;
+use CobbyPlugin\Service\NotificationService;
+use CobbyPlugin\Util\SecurityTrait;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Api\Context\AdminApiSource;
@@ -165,15 +165,10 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
                 $eventSuffix = ($operation === 'delete') ? 'deleted' : 'written';
                 $eventName = $entityType . '.' . $eventSuffix;
 
-                // Get workspace identification
-                $workspaceId = $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX . 'workspaceId');
-                $shopUrl = $this->getSafeHttpHost();
-
                 // Build lightweight notification payload
                 $payload = [
                     'event' => $eventName,
-                    'workspaceId' => $workspaceId,
-                    'shopUrl' => $shopUrl,
+                    'shopUrl' => $this->getSafeHttpHost(),
                     'entityType' => $entityType,
                     'entityId' => $entityId,
                     'operation' => $operation,

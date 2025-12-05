@@ -13,14 +13,14 @@
              ======================================== -->
 
         <!-- Queue Service (Metadata-Only Architecture) -->
-        <service id="CobbyShopware6Extension\Service\QueueTableService">
+        <service id="CobbyPlugin\Service\QueueTableService">
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="monolog.logger"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
 
         <!-- Notification Service (Webhook delivery) - public for Plugin lifecycle access -->
-        <service id="CobbyShopware6Extension\Service\NotificationService" public="true">
+        <service id="CobbyPlugin\Service\NotificationService" public="true">
             <argument type="service" id="monolog.logger"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
@@ -30,8 +30,8 @@
              ======================================== -->
 
         <!-- Queue Controller (API endpoints for queue management) -->
-        <service id="CobbyShopware6Extension\Controller\QueueTableController" public="true">
-            <argument type="service" id="CobbyShopware6Extension\Service\QueueTableService"/>
+        <service id="CobbyPlugin\Controller\QueueTableController" public="true">
+            <argument type="service" id="CobbyPlugin\Service\QueueTableService"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
             </call>
@@ -46,8 +46,8 @@
              as event subscribers with all required dependencies injected via constructor.
 
              Dependencies (autowired):
-             - Cobby\Service\QueueTableService
-             - Cobby\Service\NotificationService
+             - CobbyPlugin\Service\QueueTableService
+             - CobbyPlugin\Service\NotificationService
              - Psr\Log\LoggerInterface (monolog.logger)
              - Shopware\Core\System\SystemConfig\SystemConfigService
 
@@ -64,7 +64,7 @@
              - DeliveryTimeSubscriber (2 events)
              - TagSubscriber (2 events)
         -->
-        <prototype namespace="CobbyShopware6Extension\Subscriber\" resource="../../src/Subscriber/*Subscriber.php">
+        <prototype namespace="CobbyPlugin\Subscriber\" resource="../../src/Subscriber/*Subscriber.php">
             <tag name="kernel.event_subscriber"/>
         </prototype>
     </services>

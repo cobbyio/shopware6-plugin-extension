@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace CobbyShopware6Extension\Exception;
+namespace CobbyPlugin\Exception;
 
 /**
  * Exception thrown when queue operations fail.

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace CobbyShopware6Extension;
+namespace CobbyPlugin;
 
-use CobbyShopware6Extension\Service\NotificationService;
+use CobbyPlugin\Service\NotificationService;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\ActivateContext;
 use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
@@ -22,7 +22,7 @@ class CobbyPlugin extends Plugin
 
     public function getMigrationNamespace(): string
     {
-        return 'CobbyShopware6Extension\\Migration';
+        return 'CobbyPlugin\\Migration';
     }
 
     public function getMigrationPath(): string

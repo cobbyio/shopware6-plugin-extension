@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace CobbyShopware6Extension\Subscriber;
+namespace CobbyPlugin\Subscriber;
 
-use CobbyShopware6Extension\CobbyPlugin;
+use CobbyPlugin\CobbyPlugin;
 
 class ManufacturerSubscriber extends SimpleEntitySubscriber
 {

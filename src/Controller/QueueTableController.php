@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace CobbyShopware6Extension\Controller;
+namespace CobbyPlugin\Controller;
 
-use CobbyShopware6Extension\Service\QueueTableService;
+use CobbyPlugin\Service\QueueTableService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

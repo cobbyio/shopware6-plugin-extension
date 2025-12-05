@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace CobbyShopware6Extension\Util;
+namespace CobbyPlugin\Util;
 
 /**
  * Security utilities for validating and sanitizing HTTP headers.

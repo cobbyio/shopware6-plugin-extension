@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace CobbyShopware6Extension\Service;
+namespace CobbyPlugin\Service;
 
-use CobbyShopware6Extension\CobbyPlugin;
-use CobbyShopware6Extension\Exception\QueueException;
-use CobbyShopware6Extension\Util\SecurityTrait;
+use CobbyPlugin\CobbyPlugin;
+use CobbyPlugin\Exception\QueueException;
+use CobbyPlugin\Util\SecurityTrait;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Api\Context\AdminApiSource;
@@ -30,8 +30,6 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
 class QueueTableService
 {
     use SecurityTrait;
-
-    private const CONFIG_WORKSPACE_ID = CobbyPlugin::CONFIG_PREFIX . 'workspaceId';
 
     public function __construct(
         private readonly Connection $connection,

@@ -9,14 +9,16 @@
         All configuration is managed via API (not Admin UI):
 
         API Endpoints:
-        - POST /api/_action/cobby/workspace  - Set workspaceId (required)
         - GET  /api/_action/cobby/config     - View current configuration
 
         Configuration stored under cobby.config.*:
-        - baseUrl: API base URL (default: https://automate.cobby.io)
-        - workspaceId: Workspace identifier (set via API)
+        - baseUrl: Full extension URL (e.g., https://automate.cobby.io/workspaces/{id}/shopware/extension)
         - cobbyIntegrationId: Auto-detected from integration table (label='cobby')
         - enableProductEvents, enableCategoryEvents, etc. (set at install)
+
+        URL Schema:
+        - Status notifications: baseUrl
+        - Webhooks: baseUrl/webhook
 
         Enable-Toggles are set to 'true' during plugin installation.
         To modify them, update directly in system_config table:
