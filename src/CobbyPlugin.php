@@ -50,7 +50,7 @@ class CobbyPlugin extends Plugin
     {
         parent::install($context);
         $this->initializeDefaultConfiguration();
-        $this->createCobbyAclRole();
+        // $this->createCobbyAclRole();
         $this->sendLifecycleNotification('installed');
     }
 
@@ -67,7 +67,7 @@ class CobbyPlugin extends Plugin
         }
 
         $this->removeConfiguration();
-        $this->removeCobbyAclRole();
+        // $this->removeCobbyAclRole();
         $this->dropQueueTable();
     }
 
@@ -175,10 +175,6 @@ class CobbyPlugin extends Plugin
                 ['name' => 'cobby']
             );
 
-            if ($existing) {
-                return; // Already exists
-            }
-
             // Read and write permissions for all tracked entities
             $privileges = [
                 'product:read', 'product:write',
@@ -193,15 +189,28 @@ class CobbyPlugin extends Plugin
                 'tag:read', 'tag:write',
                 'property_group:read', 'property_group:write',
                 'property_group_option:read', 'property_group_option:write',
+                'system_config:read', 'system_config:write',
             ];
 
-            // Create ACL role
-            $connection->insert('acl_role', [
-                'id' => Uuid::randomBytes(),
-                'name' => 'cobby',
-                'privileges' => json_encode($privileges),
-                'created_at' => (new \DateTime())->format('Y-m-d H:i:s.v'),
-            ]);
+            if ($existing) {
+                // Update existing role with current privileges
+                $connection->executeStatement(
+                    'UPDATE acl_role SET privileges = :privileges, updated_at = :updated_at WHERE name = :name',
+                    [
+                        'name' => 'cobby',
+                        'privileges' => json_encode($privileges),
+                        'updated_at' => (new \DateTime())->format('Y-m-d H:i:s.v'),
+                    ]
+                );
+            } else {
+                // Create new ACL role
+                $connection->insert('acl_role', [
+                    'id' => Uuid::randomBytes(),
+                    'name' => 'cobby',
+                    'privileges' => json_encode($privileges),
+                    'created_at' => (new \DateTime())->format('Y-m-d H:i:s.v'),
+                ]);
+            }
 
         } catch (\Throwable $e) {
             error_log('Cobby ACL role creation failed: ' . $e->getMessage());
