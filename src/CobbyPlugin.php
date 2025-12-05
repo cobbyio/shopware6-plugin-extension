@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Doctrine\DBAL\Connection;
+use Shopware\Core\Framework\Uuid\Uuid;
 
 class CobbyPlugin extends Plugin
 {
@@ -49,6 +50,7 @@ class CobbyPlugin extends Plugin
     {
         parent::install($context);
         $this->initializeDefaultConfiguration();
+        $this->createCobbyAclRole();
         $this->sendLifecycleNotification('installed');
     }
 
@@ -65,6 +67,7 @@ class CobbyPlugin extends Plugin
         }
 
         $this->removeConfiguration();
+        $this->removeCobbyAclRole();
         $this->dropQueueTable();
     }
 
@@ -154,6 +157,73 @@ class CobbyPlugin extends Plugin
         } catch (\Throwable $e) {
             // Log error for debugging - lifecycle should not fail due to notification errors
             error_log('Cobby lifecycle notification failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Create the cobby ACL role with read and write permissions for all tracked entities.
+     * Admin creates the integration manually in Shopware Admin and assigns this role.
+     */
+    private function createCobbyAclRole(): void
+    {
+        try {
+            $connection = $this->container->get(Connection::class);
+
+            // Check if ACL role already exists
+            $existing = $connection->fetchOne(
+                'SELECT id FROM acl_role WHERE name = :name',
+                ['name' => 'cobby']
+            );
+
+            if ($existing) {
+                return; // Already exists
+            }
+
+            // Read and write permissions for all tracked entities
+            $privileges = [
+                'product:read', 'product:write',
+                'category:read', 'category:write',
+                'tax:read', 'tax:write',
+                'currency:read', 'currency:write',
+                'product_manufacturer:read', 'product_manufacturer:write',
+                'sales_channel:read', 'sales_channel:write',
+                'rule:read', 'rule:write',
+                'unit:read', 'unit:write',
+                'delivery_time:read', 'delivery_time:write',
+                'tag:read', 'tag:write',
+                'property_group:read', 'property_group:write',
+                'property_group_option:read', 'property_group_option:write',
+            ];
+
+            // Create ACL role
+            $connection->insert('acl_role', [
+                'id' => Uuid::randomBytes(),
+                'name' => 'cobby',
+                'privileges' => json_encode($privileges),
+                'created_at' => (new \DateTime())->format('Y-m-d H:i:s.v'),
+            ]);
+
+        } catch (\Throwable $e) {
+            error_log('Cobby ACL role creation failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Remove the cobby ACL role.
+     */
+    private function removeCobbyAclRole(): void
+    {
+        try {
+            $connection = $this->container->get(Connection::class);
+
+            // Delete ACL role (integration_role entries cascade automatically)
+            $connection->executeStatement(
+                'DELETE FROM acl_role WHERE name = :name',
+                ['name' => 'cobby']
+            );
+
+        } catch (\Throwable $e) {
+            error_log('Cobby ACL role removal failed: ' . $e->getMessage());
         }
     }
 }
