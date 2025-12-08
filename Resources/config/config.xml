@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <!--
+        cobby Plugin Configuration
+        ==========================
+
+        All configuration is managed via API (not Admin UI):
+
+        API Endpoints:
+        - GET  /api/_action/cobby/config     - View current configuration
+
+        Configuration stored under cobby.config.*:
+        - baseUrl: Full extension URL (e.g., https://automate.cobby.io/workspaces/{id}/shopware/extension)
+        - cobbyIntegrationId: Auto-detected from integration table (label='cobby')
+        - enableProductEvents, enableCategoryEvents, etc. (set at install)
+
+        URL Schema:
+        - Status notifications: baseUrl
+        - Webhooks: baseUrl/webhook
+
+        Enable-Toggles are set to 'true' during plugin installation.
+        To modify them, update directly in system_config table:
+        UPDATE system_config SET configuration_value = '{"_value": false}'
+        WHERE configuration_key = 'cobby.config.enableProductEvents';
+    -->
+
+</config>
