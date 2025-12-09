@@ -50,7 +50,7 @@ class CobbyPlugin extends Plugin
     {
         parent::install($context);
         $this->initializeDefaultConfiguration();
-        // $this->createCobbyAclRole();
+        $this->createCobbyAclRole();
         $this->sendLifecycleNotification('installed');
     }
 
@@ -67,7 +67,7 @@ class CobbyPlugin extends Plugin
         }
 
         $this->removeConfiguration();
-        // $this->removeCobbyAclRole();
+        $this->removeCobbyAclRole();
         $this->dropQueueTable();
     }
 
@@ -177,19 +177,83 @@ class CobbyPlugin extends Plugin
 
             // Read and write permissions for all tracked entities
             $privileges = [
-                'product:read', 'product:write',
-                'category:read', 'category:write',
-                'tax:read', 'tax:write',
-                'currency:read', 'currency:write',
-                'product_manufacturer:read', 'product_manufacturer:write',
-                'sales_channel:read', 'sales_channel:write',
-                'rule:read', 'rule:write',
-                'unit:read', 'unit:write',
-                'delivery_time:read', 'delivery_time:write',
-                'tag:read', 'tag:write',
-                'property_group:read', 'property_group:write',
-                'property_group_option:read', 'property_group_option:write',
-                'system_config:read', 'system_config:write',
+                "acl_role:read",
+                "category:create",
+                "category:read",
+                "category:update",
+                "category:write",
+                "currency:read",
+                "currency:write",
+                "custom_field:read",
+                "delivery_time:write",
+                "language:read",
+                "locale:read",
+                "log_entry:create",
+                "media:create",
+                "media:read",
+                "media:update",
+                "media_default_folder:read",
+                "media_folder:read",
+                "message_queue_stats:read",
+                "product:create",
+                "product:read",
+                "product:update",
+                "product:write",
+                "product_configurator_setting:create",
+                "product_configurator_setting:delete",
+                "product_configurator_setting:read",
+                "product_manufacturer:create",
+                "product_manufacturer:read",
+                "product_manufacturer:update",
+                "product_manufacturer:write",
+                "product_media:create",
+                "product_media:delete",
+                "product_media:read",
+                "product_media:update",
+                "product_option:create",
+                "product_option:delete",
+                "product_option:read",
+                "product_price:read",
+                "product_price:update",
+                "product_property:create",
+                "product_property:delete",
+                "product_property:read",
+                "product_tag:create",
+                "product_tag:delete",
+                "product_tag:read",
+                "product_tag:update",
+                "product_visibility:create",
+                "product_visibility:delete",
+                "product_visibility:read",
+                "product_visibility:update",
+                "property_group:read",
+                "property_group:update",
+                "property_group:write",
+                "property_group_option:create",
+                "property_group_option:read",
+                "property_group_option:update",
+                "property_group_option:write",
+                "property_group_option_translation:create",
+                "property_group_option_translation:read",
+                "property_group_option_translation:update",
+                "property_group_translation:read",
+                "property_group_translation:update",
+                "rule:read",
+                "rule:write",
+                "sales_channel:read",
+                "sales_channel:write",
+                "system_config:create",
+                "system_config:read",
+                "system_config:update",
+                "system_config:write",
+                "tag:create",
+                "tag:read",
+                "tag:update",
+                "tag:write",
+                "tax:read",
+                "tax:write",
+                "unit:read",
+                "unit:write"
             ];
 
             if ($existing) {
