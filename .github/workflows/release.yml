@@ -1,0 +1,44 @@
+name: Release Plugin
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from release tag
+        id: version
+        run: |
+          # Remove 'v' prefix if present (v1.0.50 -> 1.0.50)
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update version in composer.json
+        run: |
+          jq '.version = "${{ steps.version.outputs.version }}"' composer.json > composer.tmp.json
+          mv composer.tmp.json composer.json
+
+      - name: Update version in CobbyPlugin.php
+        run: |
+          sed -i "s/PLUGIN_VERSION = '[^']*'/PLUGIN_VERSION = '${{ steps.version.outputs.version }}'/" src/CobbyPlugin.php
+
+      - name: Create plugin ZIP
+        run: |
+          mkdir -p CobbyPlugin
+          cp -r src/ CobbyPlugin/src/
+          cp -r Resources/ CobbyPlugin/Resources/
+          cp composer.json CobbyPlugin/
+          cp README.md CobbyPlugin/
+          zip -r CobbyPlugin-${{ steps.version.outputs.version }}.zip CobbyPlugin
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: CobbyPlugin-${{ steps.version.outputs.version }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
