@@ -181,7 +181,6 @@ class CobbyPlugin extends Plugin
                 "category:create",
                 "category:read",
                 "category:update",
-                "category:write",
                 "currency:read",
                 "custom_field:read",
                 "delivery_time:read",
