@@ -20,6 +20,7 @@ class CobbyPlugin extends Plugin
 {
     public const string PLUGIN_VERSION = '1.0.49';
     public const string CONFIG_PREFIX = 'cobby.config.';
+    private const string COBBY_ROLE = 'cobby_role';
 
     public function getMigrationNamespace(): string
     {
@@ -172,12 +173,11 @@ class CobbyPlugin extends Plugin
             // Check if ACL role already exists
             $existing = $connection->fetchOne(
                 'SELECT id FROM acl_role WHERE name = :name',
-                ['name' => 'cobby']
+                ['name' => self::COBBY_ROLE]
             );
 
             // Read and write permissions for all tracked entities
             $privileges = [
-                "acl_role:read",
                 "category:create",
                 "category:read",
                 "category:update",
@@ -245,7 +245,7 @@ class CobbyPlugin extends Plugin
                 $connection->executeStatement(
                     'UPDATE acl_role SET privileges = :privileges, updated_at = :updated_at WHERE name = :name',
                     [
-                        'name' => 'cobby',
+                        'name' => self::COBBY_ROLE,
                         'privileges' => json_encode($privileges),
                         'updated_at' => (new \DateTime())->format('Y-m-d H:i:s.v'),
                     ]
@@ -254,7 +254,7 @@ class CobbyPlugin extends Plugin
                 // Create new ACL role
                 $connection->insert('acl_role', [
                     'id' => Uuid::randomBytes(),
-                    'name' => 'cobby',
+                    'name' => self::COBBY_ROLE,
                     'privileges' => json_encode($privileges),
                     'created_at' => (new \DateTime())->format('Y-m-d H:i:s.v'),
                 ]);
@@ -276,7 +276,7 @@ class CobbyPlugin extends Plugin
             // Delete ACL role (integration_role entries cascade automatically)
             $connection->executeStatement(
                 'DELETE FROM acl_role WHERE name = :name',
-                ['name' => 'cobby']
+                ['name' => self::COBBY_ROLE]
             );
 
         } catch (\Throwable $e) {
