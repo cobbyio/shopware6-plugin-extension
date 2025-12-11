@@ -20,6 +20,7 @@ class CobbyPlugin extends Plugin
 {
     public const string PLUGIN_VERSION = '1.0.49';
     public const string CONFIG_PREFIX = 'cobby.config.';
+    private const string COBBY_ROLE = 'cobby_role';
 
     public function getMigrationNamespace(): string
     {
@@ -50,7 +51,7 @@ class CobbyPlugin extends Plugin
     {
         parent::install($context);
         $this->initializeDefaultConfiguration();
-        // $this->createCobbyAclRole();
+        $this->createCobbyAclRole();
         $this->sendLifecycleNotification('installed');
     }
 
@@ -67,7 +68,7 @@ class CobbyPlugin extends Plugin
         }
 
         $this->removeConfiguration();
-        // $this->removeCobbyAclRole();
+        $this->removeCobbyAclRole();
         $this->dropQueueTable();
     }
 
@@ -172,24 +173,71 @@ class CobbyPlugin extends Plugin
             // Check if ACL role already exists
             $existing = $connection->fetchOne(
                 'SELECT id FROM acl_role WHERE name = :name',
-                ['name' => 'cobby']
+                ['name' => self::COBBY_ROLE]
             );
 
             // Read and write permissions for all tracked entities
             $privileges = [
-                'product:read', 'product:write',
-                'category:read', 'category:write',
-                'tax:read', 'tax:write',
-                'currency:read', 'currency:write',
-                'product_manufacturer:read', 'product_manufacturer:write',
-                'sales_channel:read', 'sales_channel:write',
-                'rule:read', 'rule:write',
-                'unit:read', 'unit:write',
-                'delivery_time:read', 'delivery_time:write',
-                'tag:read', 'tag:write',
-                'property_group:read', 'property_group:write',
-                'property_group_option:read', 'property_group_option:write',
-                'system_config:read', 'system_config:write',
+                "category:create",
+                "category:read",
+                "category:update",
+                "currency:read",
+                "custom_field:read",
+                "delivery_time:read",
+                "media:create",
+                "media:read",
+                "media:update",
+                "media_default_folder:read",
+                "media_folder:read",
+                "product:create",
+                "product:read",
+                "product:update",
+                "product_configurator_setting:create",
+                "product_configurator_setting:delete",
+                "product_configurator_setting:read",
+                "product_manufacturer:create",
+                "product_manufacturer:read",
+                "product_manufacturer:update",
+                "product_media:create",
+                "product_media:delete",
+                "product_media:read",
+                "product_media:update",
+                "product_option:create",
+                "product_option:delete",
+                "product_option:read",
+                "product_price:read",
+                "product_price:update",
+                "product_property:create",
+                "product_property:delete",
+                "product_property:read",
+                "product_tag:create",
+                "product_tag:delete",
+                "product_tag:read",
+                "product_tag:update",
+                "product_visibility:create",
+                "product_visibility:delete",
+                "product_visibility:read",
+                "product_visibility:update",
+                "property_group:read",
+                "property_group:update",
+                "property_group_option:create",
+                "property_group_option:read",
+                "property_group_option:update",
+                "property_group_option_translation:create",
+                "property_group_option_translation:read",
+                "property_group_option_translation:update",
+                "property_group_translation:read",
+                "property_group_translation:update",
+                "rule:read",
+                "sales_channel:read",
+                "system_config:create",
+                "system_config:read",
+                "system_config:update",
+                "tag:create",
+                "tag:read",
+                "tag:update",
+                "tax:read",
+                "unit:read"
             ];
 
             if ($existing) {
@@ -197,7 +245,7 @@ class CobbyPlugin extends Plugin
                 $connection->executeStatement(
                     'UPDATE acl_role SET privileges = :privileges, updated_at = :updated_at WHERE name = :name',
                     [
-                        'name' => 'cobby',
+                        'name' => self::COBBY_ROLE,
                         'privileges' => json_encode($privileges),
                         'updated_at' => (new \DateTime())->format('Y-m-d H:i:s.v'),
                     ]
@@ -206,7 +254,7 @@ class CobbyPlugin extends Plugin
                 // Create new ACL role
                 $connection->insert('acl_role', [
                     'id' => Uuid::randomBytes(),
-                    'name' => 'cobby',
+                    'name' => self::COBBY_ROLE,
                     'privileges' => json_encode($privileges),
                     'created_at' => (new \DateTime())->format('Y-m-d H:i:s.v'),
                 ]);
@@ -228,7 +276,7 @@ class CobbyPlugin extends Plugin
             // Delete ACL role (integration_role entries cascade automatically)
             $connection->executeStatement(
                 'DELETE FROM acl_role WHERE name = :name',
-                ['name' => 'cobby']
+                ['name' => self::COBBY_ROLE]
             );
 
         } catch (\Throwable $e) {
