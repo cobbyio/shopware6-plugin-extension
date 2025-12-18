@@ -148,7 +148,7 @@ Resources/config/
 - ❌ Webhook response processing (one-way communication)
 - ❌ Event filtering by field (all changes sent, filter on receiver side)
 
-### Key Features in v1.0.0
+### Key Features
 - ✅ 12 entity types with 30 events: Product (8), PropertyGroup (4), Category (2), Manufacturer (2), Tax (2), Currency (2), SalesChannel (2), Rule (2), Unit (2), DeliveryTime (2), Tag (2)
 - ✅ Database queue system (cobby_queue) with metadata-only storage (entity_type + entity_id)
 - ✅ Lazy configuration loading (changes take effect immediately)
@@ -278,11 +278,10 @@ docker exec shopware-container bash -c "
 
 ## Version Information
 
-- **Current Version**: 1.0.50
 - **Shopware Compatibility**: 6.4+
 - **PHP Version**: 8.0+ (uses PHP 8 features: Attributes, Constructor Promotion)
 
-## Architecture (v1.0.0)
+## Architecture
 **Metadata-Only Architecture:**
 - 12 entity types tracked via database queue (30 events total)
 - Single database table: `cobby_queue` (stores metadata only: entity_type + entity_id, NO entity_data column)

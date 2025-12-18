@@ -1,4 +1,4 @@
-# CobbyShopware6Extension - Architecture Documentation (v1.0.50)
+# CobbyShopware6Extension - Architecture Documentation
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -32,7 +32,7 @@ CobbyShopware6Extension extends Shopware 6's webhook functionality to support co
 - **Delivery Times** (2 events) - Delivery time configuration
 - **Tags** (2 events) - Product tags and labels
 
-### Key Features (v1.0.50)
+### Key Features
 - **Optimized Database Schema** (~60% storage reduction with VARCHAR optimizations)
 - **SimpleEntitySubscriber Pattern** (Template Method, ~50% code reduction for simple entities)
 - **PHP 8 Modern Features** (Attributes for routes, Constructor Property Promotion)
@@ -192,7 +192,7 @@ public function __construct(
 
 **Key Design**: Lazy Configuration Loading
 ```php
-// ❌ OLD (v1.0.0): Config loaded in constructor
+// ❌ OLD: Config loaded in constructor
 public function __construct(...) {
     $this->webhookUrl = $configService->get('...');  // Fixed at instantiation
 }
@@ -261,7 +261,7 @@ The plugin uses **1 database table** for reliable change tracking with metadata-
 
 **Purpose**: Tracks all entity changes using metadata only (entity_type + entity_id). External services load actual entity data on-demand via Shopware API.
 
-**Schema** (v1.0.0 - Optimized):
+**Schema** (Optimized):
 ```sql
 CREATE TABLE IF NOT EXISTS `cobby_queue` (
     `queue_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -777,7 +777,7 @@ private const PRODUCT_ASSOCIATIONS = [
 
 ### 1. Abstract Base Class Pattern (DRY)
 
-**Before (v1.0.0)**: Each subscriber had ~200 lines of duplicate code
+**Before**: Each subscriber had ~200 lines of duplicate code
 ```php
 // PropertyGroupSubscriber.php - 245 lines
 private function extractPrimaryKey($pk) { /* duplicate */ }
@@ -835,7 +835,7 @@ abstract protected function extractEntityData($entity): array;  // Entity → ar
 
 ### 3. Lazy Loading Pattern
 
-**Old Approach (v1.0.0)**: Eager loading in constructor
+**Old Approach**: Eager loading in constructor
 ```php
 class WebhookService {
     private string $webhookUrl;
@@ -964,7 +964,7 @@ curl_setopt($ch, CURLOPT_TIMEOUT, 5);          // 5s total request time
 **Decision**: Load configuration on-demand via getter methods
 
 **Reasoning**:
-**User Experience Problem** (v1.0.0):
+**User Experience Problem**:
 1. Admin changes webhook URL in settings
 2. Clicks "Save"
 3. Tests webhook → Still uses old URL! 😕
@@ -1071,7 +1071,7 @@ if ($payload['versionId'] !== Defaults::LIVE_VERSION) {
 
 **Decision**: Use `JSON_THROW_ON_ERROR` flag in json_encode()
 
-**Problem** (v1.0.0):
+**Problem**:
 ```php
 $json = json_encode($data);  // Returns false on error!
 curl_setopt($ch, CURLOPT_POSTFIELDS, $json);  // Sends "false" 😱
@@ -1096,7 +1096,7 @@ try {
 
 **Decision**: Use `LoggerInterface` instead of hardcoded file paths
 
-**Old Approach** (v1.0.0):
+**Old Approach**:
 ```php
 file_put_contents('/var/www/html/var/log/cobby_webhook.log', ...);
 ```
@@ -1620,7 +1620,7 @@ Filtered: ["name"]  // Only name is relevant
 - Comprehensive entity data with deep associations (loaded live from Shopware)
 - Enhanced security (HTTP_HOST validation, HMAC signing)
 
-### v1.0.0 (2025-01-10)
+### Initial Release
 - Property Group webhooks (4 events)
 - Product webhooks (8 events)
 - Basic HMAC signature validation

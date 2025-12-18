@@ -2,7 +2,7 @@
 
 ## 🏗️ Architecture Overview
 
-### Component Hierarchy (v1.0.50)
+### Component Hierarchy
 ```
 CobbyShopware6Extension (Main Plugin Class)
     ├── Service/
@@ -74,14 +74,14 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
 
 **Problem**: Configuration loaded in constructor → changes required cache clear.
 
-**Old Approach (v1.0.0)**:
+**Old Approach**:
 ```php
 public function __construct(...) {
     $this->webhookUrl = $configService->get('...');  // ❌ Fixed at instantiation
 }
 ```
 
-**Current Approach (v1.0.0)**:
+**Current Approach**:
 ```php
 private function getWebhookUrl(): string {
     return $this->systemConfigService->get('...');  // ✅ Fresh on each call
@@ -133,13 +133,13 @@ try {
 
 ### 5. PSR-3 Compliant Logging
 
-**Old Approach (v1.0.0)**:
+**Old Approach**:
 ```php
 // ❌ Hardcoded file path
 file_put_contents('/var/www/html/var/log/cobby_webhook.log', ...);
 ```
 
-**Current Approach (v1.0.0)**:
+**Current Approach**:
 ```php
 // ✅ PSR-3 logger with context
 $this->logger->info('Webhook sent successfully', [
@@ -493,7 +493,7 @@ try {
 
 ## 🔄 Migration Path
 
-### From v0.6.0-beta to v1.0.0
+### Migration from Beta
 
 **Major Changes**:
 - ✅ Added 12 new entity types (14 total, 44 events)
@@ -542,5 +542,4 @@ Include:
 ---
 
 *Last updated: January 23, 2025*
-*Plugin version: 1.0.50*
 *Shopware compatibility: 6.4+*
