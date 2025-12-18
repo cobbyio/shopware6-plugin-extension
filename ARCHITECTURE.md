@@ -1,4 +1,4 @@
-# CobbyShopware6Extension - Architecture Documentation (v1.0.0)
+# CobbyShopware6Extension - Architecture Documentation (v1.0.50)
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -32,7 +32,7 @@ CobbyShopware6Extension extends Shopware 6's webhook functionality to support co
 - **Delivery Times** (2 events) - Delivery time configuration
 - **Tags** (2 events) - Product tags and labels
 
-### Key Features (v1.0.0)
+### Key Features (v1.0.50)
 - **Optimized Database Schema** (~60% storage reduction with VARCHAR optimizations)
 - **SimpleEntitySubscriber Pattern** (Template Method, ~50% code reduction for simple entities)
 - **PHP 8 Modern Features** (Attributes for routes, Constructor Property Promotion)

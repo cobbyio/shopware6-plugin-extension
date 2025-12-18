@@ -18,7 +18,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
 
 class CobbyPlugin extends Plugin
 {
-    public const string PLUGIN_VERSION = '1.0.49';
+    public const string PLUGIN_VERSION = '1.0.50';
     public const string CONFIG_PREFIX = 'cobby.config.';
     private const string COBBY_ROLE = 'cobby_role';
 

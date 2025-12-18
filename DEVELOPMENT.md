@@ -2,7 +2,7 @@
 
 ## 🏗️ Architecture Overview
 
-### Component Hierarchy (v1.0.0)
+### Component Hierarchy (v1.0.50)
 ```
 CobbyShopware6Extension (Main Plugin Class)
     ├── Service/
@@ -542,5 +542,5 @@ Include:
 ---
 
 *Last updated: January 23, 2025*
-*Plugin version: 1.0.0*
+*Plugin version: 1.0.50*
 *Shopware compatibility: 6.4+*

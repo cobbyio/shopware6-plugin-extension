@@ -278,7 +278,7 @@ docker exec shopware-container bash -c "
 
 ## Version Information
 
-- **Current Version**: 1.0.0
+- **Current Version**: 1.0.50
 - **Shopware Compatibility**: 6.4+
 - **PHP Version**: 8.0+ (uses PHP 8 features: Attributes, Constructor Promotion)
 
