@@ -348,7 +348,7 @@ tail -f /var/www/html/var/log/dev.log
 
 ### Missing entity data
 
-**Note**: In Metadata-Only architecture v1.0.0, the queue does NOT store entity data. External services must load entity data on-demand via Shopware API. Schema optimized with VARCHAR field sizes for ~60% storage reduction per row.
+**Note**: In Metadata-Only architecture, the queue does NOT store entity data. External services must load entity data on-demand via Shopware API. Schema optimized with VARCHAR field sizes for ~60% storage reduction per row.
 
 - Ensure the specific entity event is enabled in configuration
 - Check that entity exists in database when external service loads it
