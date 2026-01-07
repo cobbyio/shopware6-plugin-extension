@@ -24,9 +24,12 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class QueueTableController extends AbstractController
 {
+    private QueueTableService $queueService;
+
     public function __construct(
-        private readonly QueueTableService $queueService
+        QueueTableService $queueService
     ) {
+        $this->queueService = $queueService;
     }
 
     /**

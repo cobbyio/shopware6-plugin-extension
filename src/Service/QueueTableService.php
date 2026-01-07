@@ -31,11 +31,18 @@ class QueueTableService
 {
     use SecurityTrait;
 
+    private Connection $connection;
+    private LoggerInterface $logger;
+    private SystemConfigService $systemConfigService;
+
     public function __construct(
-        private readonly Connection $connection,
-        private readonly LoggerInterface $logger,
-        private readonly SystemConfigService $systemConfigService
+        Connection $connection,
+        LoggerInterface $logger,
+        SystemConfigService $systemConfigService
     ) {
+        $this->connection = $connection;
+        $this->logger = $logger;
+        $this->systemConfigService = $systemConfigService;
     }
 
     /**
