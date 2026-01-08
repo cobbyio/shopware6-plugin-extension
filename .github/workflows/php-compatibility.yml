@@ -2,7 +2,7 @@ name: PHP Compatibility Check
 
 on:
   pull_request:
-    branches: [main, master]
+    branches: [ main, master ]
 
 #jobs:
 #  php-compatibility:
@@ -46,18 +46,17 @@ jobs:
         with:
           action: format
 
-    check:
-      runs-on: ubuntu-24.04
-      strategy:
-        fail-fast: false
-        matrix:
-          version-selection: ['8.0', '8.1', '8.2', '8.3']
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-
-        - name: Run Check
-          uses: shopware/github-actions/extension-verifier@main
-          with:
-            action: check
-            check-against: ${{ matrix.version-selection }}
+  check:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        version-selection: [ '8.0', '8.1', '8.2', '8.3' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run Check
+        uses: shopware/github-actions/extension-verifier@main
+        with:
+          action: check
+          check-against: ${{ matrix.version-selection }}
