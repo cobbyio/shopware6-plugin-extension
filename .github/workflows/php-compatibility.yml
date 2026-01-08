@@ -4,31 +4,60 @@ on:
   pull_request:
     branches: [main, master]
 
+#jobs:
+#  php-compatibility:
+#    runs-on: ubuntu-latest
+#
+#    strategy:
+#      matrix:
+#        php-version: ['8.0', '8.1', '8.2', '8.3']
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Setup PHP ${{ matrix.php-version }}
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php-version }}
+#          tools: composer
+#
+#      - name: Check PHP syntax
+#        run: |
+#          echo "Checking PHP ${{ matrix.php-version }} compatibility..."
+#          for file in $(find src -name "*.php"); do
+#            php -l "$file"
+#          done
+#          echo "All PHP files are syntactically correct for PHP ${{ matrix.php-version }}"
+#
+#      - name: Validate composer.json
+#        run: composer validate
+
 jobs:
-  php-compatibility:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        php-version: ['8.0', '8.1', '8.2', '8.3']
-
+  cs:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-24.04
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PHP ${{ matrix.php-version }}
-        uses: shivammathur/setup-php@v2
+      - name: Run CS
+        uses: shopware/github-actions/extension-verifier@main
         with:
-          php-version: ${{ matrix.php-version }}
-          tools: composer
+          action: format
 
-      - name: Check PHP syntax
-        run: |
-          echo "Checking PHP ${{ matrix.php-version }} compatibility..."
-          for file in $(find src -name "*.php"); do
-            php -l "$file"
-          done
-          echo "All PHP files are syntactically correct for PHP ${{ matrix.php-version }}"
+    check:
+      runs-on: ubuntu-24.04
+      strategy:
+        fail-fast: false
+        matrix:
+          version-selection: ['8.0', '8.1', '8.2', '8.3']
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
 
-      - name: Validate composer.json
-        run: composer validate
+        - name: Run Check
+          uses: shopware/github-actions/extension-verifier@main
+          with:
+            action: check
+            check-against: ${{ matrix.version-selection }}
