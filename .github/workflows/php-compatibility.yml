@@ -23,10 +23,11 @@ jobs:
           tools: composer
 
       - name: Check PHP syntax
-        shell: bash
         run: |
           echo "Checking PHP ${{ matrix.php-version }} compatibility..."
-          find src -name "*.php" -print0 | xargs -0 -n1 php -l
+          for file in $(find src -name "*.php"); do
+            php -l "$file"
+          done
           echo "All PHP files are syntactically correct for PHP ${{ matrix.php-version }}"
 
       - name: Validate composer.json
