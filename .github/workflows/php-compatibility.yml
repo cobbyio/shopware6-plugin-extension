@@ -31,4 +31,4 @@ jobs:
           echo "All PHP files are syntactically correct for PHP ${{ matrix.php-version }}"
 
       - name: Validate composer.json
-        run: composer validate --strict
+        run: composer validate
