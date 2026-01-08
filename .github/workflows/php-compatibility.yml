@@ -25,8 +25,14 @@ jobs:
       - name: Check PHP syntax
         run: |
           echo "Checking PHP ${{ matrix.php-version }} compatibility..."
-          find src -name "*.php" -exec php -l {} \; | grep -v "No syntax errors"
-          if [ $? -eq 0 ]; then
+          error_found=0
+          while IFS= read -r -d '' file; do
+            if ! php -l "$file" > /dev/null 2>&1; then
+              php -l "$file"
+              error_found=1
+            fi
+          done < <(find src -name "*.php" -print0)
+          if [ $error_found -eq 1 ]; then
             echo "Syntax errors found!"
             exit 1
           fi
