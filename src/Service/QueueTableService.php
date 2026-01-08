@@ -6,6 +6,7 @@ use CobbyPlugin\CobbyPlugin;
 use CobbyPlugin\Exception\QueueException;
 use CobbyPlugin\Util\SecurityTrait;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Api\Context\AdminApiSource;
 use Shopware\Core\Framework\Context;
@@ -206,8 +207,8 @@ class QueueTableService
                 'minQueueId' => $minQueueId,
                 'pageSize' => $pageSize,
             ], [
-                'minQueueId' => \PDO::PARAM_INT,
-                'pageSize' => \PDO::PARAM_INT,
+                'minQueueId' => ParameterType::INTEGER,
+                'pageSize' => ParameterType::INTEGER,
             ]);
 
             return $result;

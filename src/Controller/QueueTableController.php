@@ -70,8 +70,8 @@ class QueueTableController extends AbstractController
     #[Route(path: '/api/cobby-queue', name: 'api.action.cobby.queue.get', methods: ['GET'], defaults: ['_routeScope' => ['api']])]
     public function list(Request $request): JsonResponse
     {
-        $minQueueId = (int) $request->query->get('minQueueId', 0);
-        $pageSize = (int) $request->query->get('pageSize', 100);
+        $minQueueId = (int) $request->query->get('minQueueId', '0');
+        $pageSize = (int) $request->query->get('pageSize', '100');
 
         // Limit page size to prevent performance issues
         if ($pageSize > 1000) {
