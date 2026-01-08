@@ -15,6 +15,6 @@ class RuleSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX.'enableRuleEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableRuleEvents';
     }
 }

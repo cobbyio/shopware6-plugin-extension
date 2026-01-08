@@ -21,6 +21,6 @@ class CategorySubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX.'enableCategoryEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableCategoryEvents';
     }
 }

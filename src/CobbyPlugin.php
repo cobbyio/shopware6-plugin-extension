@@ -31,14 +31,14 @@ class CobbyPlugin extends Plugin
 
     public function getMigrationPath(): string
     {
-        return __DIR__.'/Migration';
+        return __DIR__ . '/Migration';
     }
 
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
     }
 
@@ -46,7 +46,7 @@ class CobbyPlugin extends Plugin
     {
         parent::configureRoutes($routes, $environment);
 
-        $routes->import(__DIR__.'/../Resources/config/routes.xml');
+        $routes->import(__DIR__ . '/../Resources/config/routes.xml');
     }
 
     public function install(InstallContext $context): void
@@ -74,6 +74,18 @@ class CobbyPlugin extends Plugin
         $this->dropQueueTable();
     }
 
+    public function activate(ActivateContext $context): void
+    {
+        parent::activate($context);
+        $this->sendLifecycleNotification('activated');
+    }
+
+    public function deactivate(DeactivateContext $context): void
+    {
+        $this->sendLifecycleNotification('deactivated');
+        parent::deactivate($context);
+    }
+
     /**
      * Send uninstall notification using direct service instantiation.
      * This is needed because plugin services are not available after deactivation.
@@ -92,18 +104,6 @@ class CobbyPlugin extends Plugin
         } catch (\Throwable $e) {
             // Silently ignore - lifecycle should not fail due to notification errors
         }
-    }
-
-    public function activate(ActivateContext $context): void
-    {
-        parent::activate($context);
-        $this->sendLifecycleNotification('activated');
-    }
-
-    public function deactivate(DeactivateContext $context): void
-    {
-        $this->sendLifecycleNotification('deactivated');
-        parent::deactivate($context);
     }
 
     private function initializeDefaultConfiguration(): void
@@ -128,8 +128,8 @@ class CobbyPlugin extends Plugin
         ];
 
         foreach ($defaults as $key => $value) {
-            if (null === $systemConfig->get($domain.$key)) {
-                $systemConfig->set($domain.$key, $value);
+            if ($systemConfig->get($domain . $key) === null) {
+                $systemConfig->set($domain . $key, $value);
             }
         }
     }
@@ -142,7 +142,7 @@ class CobbyPlugin extends Plugin
         $connection = $this->container->get(Connection::class);
         $connection->executeStatement(
             'DELETE FROM system_config WHERE configuration_key LIKE :key',
-            ['key' => $domain.'%']
+            ['key' => $domain . '%']
         );
     }
 
@@ -159,7 +159,7 @@ class CobbyPlugin extends Plugin
             $notificationService->sendStatusNotification($status);
         } catch (\Throwable $e) {
             // Log error for debugging - lifecycle should not fail due to notification errors
-            error_log('Cobby lifecycle notification failed: '.$e->getMessage());
+            error_log('Cobby lifecycle notification failed: ' . $e->getMessage());
         }
     }
 
@@ -262,7 +262,7 @@ class CobbyPlugin extends Plugin
                 ]);
             }
         } catch (\Throwable $e) {
-            error_log('Cobby ACL role creation failed: '.$e->getMessage());
+            error_log('Cobby ACL role creation failed: ' . $e->getMessage());
         }
     }
 
@@ -280,7 +280,7 @@ class CobbyPlugin extends Plugin
                 ['name' => self::COBBY_ROLE]
             );
         } catch (\Throwable $e) {
-            error_log('Cobby ACL role removal failed: '.$e->getMessage());
+            error_log('Cobby ACL role removal failed: ' . $e->getMessage());
         }
     }
 }

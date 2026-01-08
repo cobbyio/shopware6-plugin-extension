@@ -35,7 +35,9 @@ class QueueTableService
     use SecurityTrait;
 
     private Connection $connection;
+
     private LoggerInterface $logger;
+
     private SystemConfigService $systemConfigService;
 
     public function __construct(
@@ -55,11 +57,11 @@ class QueueTableService
      * The $entityData parameter is kept for backwards compatibility but is ignored.
      * External service loads entity data on-demand via Shopware API.
      *
-     * @param string       $entityType      Entity type (e.g., 'product', 'category', 'order')
-     * @param string       $entityId        Single entity ID
-     * @param string       $operation       Operation type ('insert', 'update', 'delete')
-     * @param array        $entityData      IGNORED - kept for backwards compatibility
-     * @param string       $context         Context where change occurred ('backend', 'api', 'frontend')
+     * @param string $entityType Entity type (e.g., 'product', 'category', 'order')
+     * @param string $entityId Single entity ID
+     * @param string $operation Operation type ('insert', 'update', 'delete')
+     * @param array $entityData IGNORED - kept for backwards compatibility
+     * @param string $context Context where change occurred ('backend', 'api', 'frontend')
      * @param Context|null $shopwareContext Shopware context to extract admin user (optional)
      *
      * @return int|null Created queue ID, or null on failure
@@ -140,7 +142,7 @@ class QueueTableService
     public function getCobbyIntegrationId(): ?string
     {
         // Check cache first
-        $cached = $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX.'cobbyIntegrationId');
+        $cached = $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX . 'cobbyIntegrationId');
         if ($cached) {
             return $cached;
         }
@@ -154,7 +156,7 @@ class QueueTableService
 
             if ($result) {
                 // Cache for future requests
-                $this->systemConfigService->set(CobbyPlugin::CONFIG_PREFIX.'cobbyIntegrationId', $result);
+                $this->systemConfigService->set(CobbyPlugin::CONFIG_PREFIX . 'cobbyIntegrationId', $result);
                 $this->logger->info('Cobby integration ID loaded and cached', ['integration_id' => $result]);
 
                 return $result;
@@ -183,7 +185,7 @@ class QueueTableService
      * External service loads entity data on-demand via Shopware API.
      *
      * @param int $minQueueId Minimum queue ID to retrieve (exclusive)
-     * @param int $pageSize   Maximum number of entries to return (default: 100, max: 1000)
+     * @param int $pageSize Maximum number of entries to return (default: 100, max: 1000)
      *
      * @return array Array of queue entries (metadata only)
      */

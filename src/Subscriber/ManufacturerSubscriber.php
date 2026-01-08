@@ -20,6 +20,6 @@ class ManufacturerSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX.'enableManufacturerEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableManufacturerEvents';
     }
 }

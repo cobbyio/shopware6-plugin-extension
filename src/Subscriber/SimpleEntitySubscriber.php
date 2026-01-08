@@ -31,14 +31,6 @@ use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityWrittenEvent;
 abstract class SimpleEntitySubscriber extends AbstractWebhookSubscriber
 {
     /**
-     * Get the entity type for this subscriber.
-     * Must be overridden by child classes.
-     *
-     * @return string Entity type (e.g., 'tax', 'currency', 'sales_channel')
-     */
-    abstract protected function getEntityType(): string;
-
-    /**
      * Automatically subscribe to entity.written and entity.deleted events.
      *
      * @return array<string, string> Event name => handler method mapping
@@ -48,29 +40,9 @@ abstract class SimpleEntitySubscriber extends AbstractWebhookSubscriber
         // Note: Can't use $this in static context, but can use static late binding
         // This requires child class to be instantiated, which Symfony does automatically
         return [
-            static::getEntityTypeStatic().'.written' => 'onEntityWritten',
-            static::getEntityTypeStatic().'.deleted' => 'onEntityDeleted',
+            static::getEntityTypeStatic() . '.written' => 'onEntityWritten',
+            static::getEntityTypeStatic() . '.deleted' => 'onEntityDeleted',
         ];
-    }
-
-    /**
-     * Static wrapper for getEntityType() to use in getSubscribedEvents().
-     * Child classes can override this if needed.
-     *
-     * @return string Entity type
-     */
-    protected static function getEntityTypeStatic(): string
-    {
-        // This is a workaround since we can't call instance methods from static context
-        // We extract entity type from class name (e.g., TaxSubscriber -> tax)
-        $className = static::class;
-        $shortName = substr($className, strrpos($className, '\\') + 1);
-        $entityName = str_replace('Subscriber', '', $shortName);
-
-        // Convert CamelCase to snake_case
-        $snakeCase = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $entityName));
-
-        return $snakeCase;
     }
 
     /**
@@ -91,5 +63,33 @@ abstract class SimpleEntitySubscriber extends AbstractWebhookSubscriber
     public function onEntityDeleted(EntityDeletedEvent $event): void
     {
         $this->handleSimpleDeletedEvent($event, $this->getEntityType());
+    }
+
+    /**
+     * Get the entity type for this subscriber.
+     * Must be overridden by child classes.
+     *
+     * @return string Entity type (e.g., 'tax', 'currency', 'sales_channel')
+     */
+    abstract protected function getEntityType(): string;
+
+    /**
+     * Static wrapper for getEntityType() to use in getSubscribedEvents().
+     * Child classes can override this if needed.
+     *
+     * @return string Entity type
+     */
+    protected static function getEntityTypeStatic(): string
+    {
+        // This is a workaround since we can't call instance methods from static context
+        // We extract entity type from class name (e.g., TaxSubscriber -> tax)
+        $className = static::class;
+        $shortName = substr($className, strrpos($className, '\\') + 1);
+        $entityName = str_replace('Subscriber', '', $shortName);
+
+        // Convert CamelCase to snake_case
+        $snakeCase = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $entityName));
+
+        return $snakeCase;
     }
 }

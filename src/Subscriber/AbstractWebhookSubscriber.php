@@ -41,8 +41,11 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
     use SecurityTrait;
 
     protected QueueTableService $queueService;
+
     protected NotificationService $notificationService;
+
     protected LoggerInterface $logger;
+
     protected SystemConfigService $systemConfigService;
 
     public function __construct(
@@ -69,11 +72,11 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
      */
     protected function extractPrimaryKey($primaryKey): ?string
     {
-        if (is_string($primaryKey)) {
+        if (\is_string($primaryKey)) {
             return $primaryKey;
         }
 
-        if (is_array($primaryKey)) {
+        if (\is_array($primaryKey)) {
             return $primaryKey['id'] ?? $primaryKey[0] ?? null;
         }
 
@@ -87,7 +90,7 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
     {
         $enabled = $this->systemConfigService->get($this->getConfigKey());
 
-        return false !== $enabled;
+        return $enabled !== false;
     }
 
     /**
@@ -133,7 +136,7 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
 
         // Unknown source type - log warning and fallback
         $this->logger->warning('Unknown ContextSource type encountered', [
-            'source_type' => get_class($source),
+            'source_type' => $source::class,
             'entity_context' => 'webhook_subscriber',
         ]);
 
@@ -150,10 +153,10 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
      *
      * This is the RECOMMENDED method for all subscribers in v0.5.0-beta.
      *
-     * @param string       $entityType      Entity type (e.g., 'product', 'category', 'tag')
-     * @param string       $entityId        Single entity ID
-     * @param string       $operation       Operation type (insert, update, delete)
-     * @param string       $context         Context where change occurred (backend, api, frontend)
+     * @param string $entityType Entity type (e.g., 'product', 'category', 'tag')
+     * @param string $entityId Single entity ID
+     * @param string $operation Operation type (insert, update, delete)
+     * @param string $context Context where change occurred (backend, api, frontend)
      * @param Context|null $shopwareContext Shopware context to extract admin user (optional)
      */
     protected function enqueueMetadataOnly(
@@ -176,9 +179,9 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
 
             // 2. Send lightweight webhook notification if queue entry was created
             //    (Skip notification for Cobby integration - they pull data themselves)
-            if (null !== $queueId && 'cobby' !== $context) {
-                $eventSuffix = ('delete' === $operation) ? 'deleted' : 'written';
-                $eventName = $entityType.'.'.$eventSuffix;
+            if ($queueId !== null && $context !== 'cobby') {
+                $eventSuffix = ($operation === 'delete') ? 'deleted' : 'written';
+                $eventName = $entityType . '.' . $eventSuffix;
 
                 // Build lightweight notification payload
                 $payload = [
@@ -207,8 +210,8 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
     /**
      * Generic handler for simple entity.written events.
      *
-     * @param EntityWrittenEvent $event      The written event
-     * @param string             $entityType The entity type (e.g., 'category', 'tax')
+     * @param EntityWrittenEvent $event The written event
+     * @param string $entityType The entity type (e.g., 'category', 'tax')
      */
     protected function handleSimpleWrittenEvent(EntityWrittenEvent $event, string $entityType): void
     {
@@ -234,8 +237,8 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
     /**
      * Generic handler for simple entity.deleted events.
      *
-     * @param EntityDeletedEvent $event      The deleted event
-     * @param string             $entityType The entity type (e.g., 'category', 'tax')
+     * @param EntityDeletedEvent $event The deleted event
+     * @param string $entityType The entity type (e.g., 'category', 'tax')
      */
     protected function handleSimpleDeletedEvent(EntityDeletedEvent $event, string $entityType): void
     {
@@ -262,9 +265,9 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
      * Generic handler for parent entity updates triggered by child entity changes.
      * Example: product_price.written should trigger product update.
      *
-     * @param EntityWrittenEvent|EntityDeletedEvent $event            The event
-     * @param string                                $parentEntityType Parent entity type (e.g., 'product')
-     * @param string                                $parentIdField    Field name in payload containing parent ID (e.g., 'productId')
+     * @param EntityWrittenEvent|EntityDeletedEvent $event The event
+     * @param string $parentEntityType Parent entity type (e.g., 'product')
+     * @param string $parentIdField Field name in payload containing parent ID (e.g., 'productId')
      */
     protected function handleParentUpdateEvent($event, string $parentEntityType, string $parentIdField): void
     {

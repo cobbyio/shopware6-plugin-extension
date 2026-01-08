@@ -15,6 +15,6 @@ class CurrencySubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX.'enableCurrencyEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableCurrencyEvents';
     }
 }

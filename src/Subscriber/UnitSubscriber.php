@@ -15,6 +15,6 @@ class UnitSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX.'enableUnitEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableUnitEvents';
     }
 }

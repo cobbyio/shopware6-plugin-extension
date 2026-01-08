@@ -39,11 +39,6 @@ class ProductSubscriber extends AbstractWebhookSubscriber
         ];
     }
 
-    protected function getConfigKey(): string
-    {
-        return CobbyPlugin::CONFIG_PREFIX.'enableProductEvents';
-    }
-
     public function onProductWritten(EntityWrittenEvent $event): void
     {
         $this->handleSimpleWrittenEvent($event, 'product');
@@ -82,5 +77,10 @@ class ProductSubscriber extends AbstractWebhookSubscriber
     public function onProductCategoryDeleted(EntityDeletedEvent $event): void
     {
         $this->handleParentUpdateEvent($event, 'product', 'productId');
+    }
+
+    protected function getConfigKey(): string
+    {
+        return CobbyPlugin::CONFIG_PREFIX . 'enableProductEvents';
     }
 }

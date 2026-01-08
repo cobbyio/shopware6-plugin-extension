@@ -15,6 +15,6 @@ class SalesChannelSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX.'enableSalesChannelEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableSalesChannelEvents';
     }
 }

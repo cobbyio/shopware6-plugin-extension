@@ -53,7 +53,7 @@ trait SecurityTrait
         }
 
         // Additional validation: check host length (max 253 characters for domain names)
-        if (strlen($host) > 253) {
+        if (\strlen($host) > 253) {
             return $fallback;
         }
 
@@ -68,17 +68,17 @@ trait SecurityTrait
     private function getShopwareVersion(): string
     {
         // Try to get Shopware version from Kernel
-        if (defined('\Shopware\Core\Kernel::SHOPWARE_FALLBACK_VERSION')) {
+        if (\defined('\Shopware\Core\Kernel::SHOPWARE_FALLBACK_VERSION')) {
             return \Shopware\Core\Kernel::SHOPWARE_FALLBACK_VERSION;
         }
 
         // Fallback: Try composer.lock
-        $composerLockPath = dirname(__DIR__, 5).'/composer.lock';
+        $composerLockPath = \dirname(__DIR__, 5) . '/composer.lock';
         if (file_exists($composerLockPath)) {
             $composerLock = json_decode(file_get_contents($composerLockPath), true);
             if (isset($composerLock['packages'])) {
                 foreach ($composerLock['packages'] as $package) {
-                    if ('shopware/core' === $package['name']) {
+                    if ($package['name'] === 'shopware/core') {
                         return $package['version'] ?? 'unknown';
                     }
                 }

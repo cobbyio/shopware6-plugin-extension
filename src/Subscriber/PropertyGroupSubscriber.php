@@ -32,11 +32,6 @@ class PropertyGroupSubscriber extends AbstractWebhookSubscriber
         ];
     }
 
-    protected function getConfigKey(): string
-    {
-        return CobbyPlugin::CONFIG_PREFIX.'enablePropertyGroupEvents';
-    }
-
     public function onPropertyGroupWritten(EntityWrittenEvent $event): void
     {
         $this->handleSimpleWrittenEvent($event, 'property_group');
@@ -55,5 +50,10 @@ class PropertyGroupSubscriber extends AbstractWebhookSubscriber
     public function onPropertyGroupOptionDeleted(EntityDeletedEvent $event): void
     {
         $this->handleSimpleDeletedEvent($event, 'property_group_option');
+    }
+
+    protected function getConfigKey(): string
+    {
+        return CobbyPlugin::CONFIG_PREFIX . 'enablePropertyGroupEvents';
     }
 }

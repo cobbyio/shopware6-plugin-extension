@@ -26,6 +26,6 @@ class TagSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX.'enableTagEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableTagEvents';
     }
 }

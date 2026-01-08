@@ -89,7 +89,7 @@ class QueueTableController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'data' => $queue,
-            'count' => count($queue),
+            'count' => \count($queue),
         ]);
     }
 
@@ -139,7 +139,7 @@ class QueueTableController extends AbstractController
         } catch (\Throwable $e) {
             return new JsonResponse([
                 'success' => false,
-                'error' => 'Failed to truncate queue: '.$e->getMessage(),
+                'error' => 'Failed to truncate queue: ' . $e->getMessage(),
             ], 500);
         }
     }

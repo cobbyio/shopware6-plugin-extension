@@ -21,6 +21,6 @@ class DeliveryTimeSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX.'enableDeliveryTimeEvents';
+        return CobbyPlugin::CONFIG_PREFIX . 'enableDeliveryTimeEvents';
     }
 }
