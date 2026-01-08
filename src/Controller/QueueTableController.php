@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Controller;
 
@@ -9,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * QueueTable API Controller for Cobby Connector (Metadata-Only Architecture)
+ * QueueTable API Controller for Cobby Connector (Metadata-Only Architecture).
  *
  * Provides REST endpoints for queue management:
  * - Get queue entries (metadata only: entity_type, entity_id, operation)
@@ -27,7 +29,7 @@ class QueueTableController extends AbstractController
     private QueueTableService $queueService;
 
     public function __construct(
-        QueueTableService $queueService
+        QueueTableService $queueService,
     ) {
         $this->queueService = $queueService;
     }
@@ -137,7 +139,7 @@ class QueueTableController extends AbstractController
         } catch (\Throwable $e) {
             return new JsonResponse([
                 'success' => false,
-                'error' => 'Failed to truncate queue: ' . $e->getMessage(),
+                'error' => 'Failed to truncate queue: '.$e->getMessage(),
             ], 500);
         }
     }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Service;
 
@@ -36,7 +38,7 @@ class NotificationService
 
     public function __construct(
         LoggerInterface $logger,
-        SystemConfigService $systemConfigService
+        SystemConfigService $systemConfigService,
     ) {
         $this->logger = $logger;
         $this->systemConfigService = $systemConfigService;
@@ -44,7 +46,7 @@ class NotificationService
 
     private function getBaseUrl(): ?string
     {
-        return $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX . 'baseUrl');
+        return $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX.'baseUrl');
     }
 
     /**
@@ -64,30 +66,33 @@ class NotificationService
     private function buildWebhookUrl(): ?string
     {
         $extensionUrl = $this->buildExtensionUrl();
-        if (empty($extensionUrl)) return null;
+        if (empty($extensionUrl)) {
+            return null;
+        }
 
-        return $extensionUrl . '/webhook';
+        return $extensionUrl.'/webhook';
     }
 
     private function isDebugLoggingEnabled(): bool
     {
-        return (bool) $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX . 'enableDebugLogging');
+        return (bool) $this->systemConfigService->get(CobbyPlugin::CONFIG_PREFIX.'enableDebugLogging');
     }
 
     /**
      * Sends a webhook with full response details (for testing and debugging).
      *
-     * @param string $eventName Event identifier (e.g., "product.written")
-     * @param array $data Webhook payload data
-     * @param string|null $url Override webhook URL (for testing)
-     * @param int|null $timeout Override timeout in seconds (default: 5)
+     * @param string      $eventName Event identifier (e.g., "product.written")
+     * @param array       $data      Webhook payload data
+     * @param string|null $url       Override webhook URL (for testing)
+     * @param int|null    $timeout   Override timeout in seconds (default: 5)
+     *
      * @return array ['success' => bool, 'http_status' => int|null, 'response' => string|null, 'error' => string|null]
      */
     public function sendWebhookWithResponse(
         string $eventName,
         array $data,
-        string $url = null,
-        int $timeout = null
+        ?string $url = null,
+        ?int $timeout = null,
     ): array {
         $webhookUrl = $url ?: $this->buildWebhookUrl();
         $webhookTimeout = $timeout ?: self::DEFAULT_TIMEOUT;
@@ -97,7 +102,7 @@ class NotificationService
                 'success' => false,
                 'error' => 'No webhook URL configured',
                 'http_status' => null,
-                'response' => null
+                'response' => null,
             ];
         }
 
@@ -115,20 +120,21 @@ class NotificationService
         } catch (\JsonException $e) {
             $this->logger->error('Failed to encode webhook data as JSON', [
                 'error' => $e->getMessage(),
-                'event' => $eventName
+                'event' => $eventName,
             ]);
+
             return [
                 'success' => false,
-                'error' => 'JSON encoding failed: ' . $e->getMessage(),
+                'error' => 'JSON encoding failed: '.$e->getMessage(),
                 'http_status' => null,
-                'response' => null
+                'response' => null,
             ];
         }
 
         // Log webhook preparation
         $logContext = [
             'event' => $eventName,
-            'url' => $webhookUrl
+            'url' => $webhookUrl,
         ];
 
         if ($this->isDebugLoggingEnabled()) {
@@ -143,7 +149,7 @@ class NotificationService
         curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            'X-Shopware-Event: ' . $eventName,
+            'X-Shopware-Event: '.$eventName,
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $webhookTimeout);
@@ -161,7 +167,7 @@ class NotificationService
         $resultContext = [
             'event' => $eventName,
             'http_status' => $httpCode,
-            'success' => $success
+            'success' => $success,
         ];
 
         if ($this->isDebugLoggingEnabled()) {
@@ -181,7 +187,7 @@ class NotificationService
             'success' => $success,
             'http_status' => $httpCode ?: null,
             'response' => $response ?: null,
-            'error' => $error ?: null
+            'error' => $error ?: null,
         ];
     }
 
@@ -189,8 +195,7 @@ class NotificationService
      * Sends a webhook without waiting for detailed response (fire-and-forget).
      *
      * @param string $eventName Event identifier (e.g., "product.written")
-     * @param array $data Webhook payload data
-     * @return void
+     * @param array  $data      Webhook payload data
      */
     public function sendWebhook(string $eventName, array $data): void
     {
@@ -209,6 +214,7 @@ class NotificationService
      * Sends a plugin lifecycle status notification.
      *
      * @param string $status Lifecycle status (installed, uninstalled, activated, deactivated)
+     *
      * @return array ['success' => bool, 'http_status' => int|null, 'response' => string|null, 'error' => string|null]
      */
     public function sendStatusNotification(string $status): array
@@ -217,11 +223,12 @@ class NotificationService
 
         if (empty($webhookUrl)) {
             $this->logger->info('Cannot send status notification: baseUrl not configured', ['status' => $status]);
+
             return [
                 'success' => false,
                 'error' => 'baseUrl not configured',
                 'http_status' => null,
-                'response' => null
+                'response' => null,
             ];
         }
 

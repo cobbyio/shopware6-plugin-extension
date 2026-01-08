@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Subscriber;
 
@@ -13,6 +15,6 @@ class CurrencySubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX . 'enableCurrencyEvents';
+        return CobbyPlugin::CONFIG_PREFIX.'enableCurrencyEvents';
     }
 }

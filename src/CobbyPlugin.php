@@ -1,20 +1,22 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin;
 
 use CobbyPlugin\Service\NotificationService;
+use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\ActivateContext;
 use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
+use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
-use Doctrine\DBAL\Connection;
-use Shopware\Core\Framework\Uuid\Uuid;
 
 class CobbyPlugin extends Plugin
 {
@@ -29,14 +31,14 @@ class CobbyPlugin extends Plugin
 
     public function getMigrationPath(): string
     {
-        return __DIR__ . '/Migration';
+        return __DIR__.'/Migration';
     }
 
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
     }
 
@@ -44,7 +46,7 @@ class CobbyPlugin extends Plugin
     {
         parent::configureRoutes($routes, $environment);
 
-        $routes->import(__DIR__ . '/../Resources/config/routes.xml');
+        $routes->import(__DIR__.'/../Resources/config/routes.xml');
     }
 
     public function install(InstallContext $context): void
@@ -126,8 +128,8 @@ class CobbyPlugin extends Plugin
         ];
 
         foreach ($defaults as $key => $value) {
-            if ($systemConfig->get($domain . $key) === null) {
-                $systemConfig->set($domain . $key, $value);
+            if (null === $systemConfig->get($domain.$key)) {
+                $systemConfig->set($domain.$key, $value);
             }
         }
     }
@@ -140,7 +142,7 @@ class CobbyPlugin extends Plugin
         $connection = $this->container->get(Connection::class);
         $connection->executeStatement(
             'DELETE FROM system_config WHERE configuration_key LIKE :key',
-            ['key' => $domain . '%']
+            ['key' => $domain.'%']
         );
     }
 
@@ -157,7 +159,7 @@ class CobbyPlugin extends Plugin
             $notificationService->sendStatusNotification($status);
         } catch (\Throwable $e) {
             // Log error for debugging - lifecycle should not fail due to notification errors
-            error_log('Cobby lifecycle notification failed: ' . $e->getMessage());
+            error_log('Cobby lifecycle notification failed: '.$e->getMessage());
         }
     }
 
@@ -178,66 +180,66 @@ class CobbyPlugin extends Plugin
 
             // Read and write permissions for all tracked entities
             $privileges = [
-                "category:create",
-                "category:read",
-                "category:update",
-                "currency:read",
-                "custom_field:read",
-                "delivery_time:read",
-                "media:create",
-                "media:read",
-                "media:update",
-                "media_default_folder:read",
-                "media_folder:read",
-                "product:create",
-                "product:read",
-                "product:update",
-                "product_configurator_setting:create",
-                "product_configurator_setting:delete",
-                "product_configurator_setting:read",
-                "product_manufacturer:create",
-                "product_manufacturer:read",
-                "product_manufacturer:update",
-                "product_media:create",
-                "product_media:delete",
-                "product_media:read",
-                "product_media:update",
-                "product_option:create",
-                "product_option:delete",
-                "product_option:read",
-                "product_price:read",
-                "product_price:update",
-                "product_property:create",
-                "product_property:delete",
-                "product_property:read",
-                "product_tag:create",
-                "product_tag:delete",
-                "product_tag:read",
-                "product_tag:update",
-                "product_visibility:create",
-                "product_visibility:delete",
-                "product_visibility:read",
-                "product_visibility:update",
-                "property_group:read",
-                "property_group:update",
-                "property_group_option:create",
-                "property_group_option:read",
-                "property_group_option:update",
-                "property_group_option_translation:create",
-                "property_group_option_translation:read",
-                "property_group_option_translation:update",
-                "property_group_translation:read",
-                "property_group_translation:update",
-                "rule:read",
-                "sales_channel:read",
-                "system_config:create",
-                "system_config:read",
-                "system_config:update",
-                "tag:create",
-                "tag:read",
-                "tag:update",
-                "tax:read",
-                "unit:read"
+                'category:create',
+                'category:read',
+                'category:update',
+                'currency:read',
+                'custom_field:read',
+                'delivery_time:read',
+                'media:create',
+                'media:read',
+                'media:update',
+                'media_default_folder:read',
+                'media_folder:read',
+                'product:create',
+                'product:read',
+                'product:update',
+                'product_configurator_setting:create',
+                'product_configurator_setting:delete',
+                'product_configurator_setting:read',
+                'product_manufacturer:create',
+                'product_manufacturer:read',
+                'product_manufacturer:update',
+                'product_media:create',
+                'product_media:delete',
+                'product_media:read',
+                'product_media:update',
+                'product_option:create',
+                'product_option:delete',
+                'product_option:read',
+                'product_price:read',
+                'product_price:update',
+                'product_property:create',
+                'product_property:delete',
+                'product_property:read',
+                'product_tag:create',
+                'product_tag:delete',
+                'product_tag:read',
+                'product_tag:update',
+                'product_visibility:create',
+                'product_visibility:delete',
+                'product_visibility:read',
+                'product_visibility:update',
+                'property_group:read',
+                'property_group:update',
+                'property_group_option:create',
+                'property_group_option:read',
+                'property_group_option:update',
+                'property_group_option_translation:create',
+                'property_group_option_translation:read',
+                'property_group_option_translation:update',
+                'property_group_translation:read',
+                'property_group_translation:update',
+                'rule:read',
+                'sales_channel:read',
+                'system_config:create',
+                'system_config:read',
+                'system_config:update',
+                'tag:create',
+                'tag:read',
+                'tag:update',
+                'tax:read',
+                'unit:read',
             ];
 
             if ($existing) {
@@ -259,9 +261,8 @@ class CobbyPlugin extends Plugin
                     'created_at' => (new \DateTime())->format('Y-m-d H:i:s.v'),
                 ]);
             }
-
         } catch (\Throwable $e) {
-            error_log('Cobby ACL role creation failed: ' . $e->getMessage());
+            error_log('Cobby ACL role creation failed: '.$e->getMessage());
         }
     }
 
@@ -278,9 +279,8 @@ class CobbyPlugin extends Plugin
                 'DELETE FROM acl_role WHERE name = :name',
                 ['name' => self::COBBY_ROLE]
             );
-
         } catch (\Throwable $e) {
-            error_log('Cobby ACL role removal failed: ' . $e->getMessage());
+            error_log('Cobby ACL role removal failed: '.$e->getMessage());
         }
     }
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Subscriber;
 
@@ -46,8 +48,8 @@ abstract class SimpleEntitySubscriber extends AbstractWebhookSubscriber
         // Note: Can't use $this in static context, but can use static late binding
         // This requires child class to be instantiated, which Symfony does automatically
         return [
-            static::getEntityTypeStatic() . '.written' => 'onEntityWritten',
-            static::getEntityTypeStatic() . '.deleted' => 'onEntityDeleted',
+            static::getEntityTypeStatic().'.written' => 'onEntityWritten',
+            static::getEntityTypeStatic().'.deleted' => 'onEntityDeleted',
         ];
     }
 

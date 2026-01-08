@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Util;
 
@@ -25,6 +27,7 @@ trait SecurityTrait
      * - Colons (:) and digits for port numbers
      *
      * @param string $fallback Fallback value if HTTP_HOST is missing or invalid (default: 'localhost')
+     *
      * @return string Validated HTTP_HOST or fallback
      */
     private function getSafeHttpHost(string $fallback = 'localhost'): string
@@ -70,12 +73,12 @@ trait SecurityTrait
         }
 
         // Fallback: Try composer.lock
-        $composerLockPath = dirname(__DIR__, 5) . '/composer.lock';
+        $composerLockPath = dirname(__DIR__, 5).'/composer.lock';
         if (file_exists($composerLockPath)) {
             $composerLock = json_decode(file_get_contents($composerLockPath), true);
             if (isset($composerLock['packages'])) {
                 foreach ($composerLock['packages'] as $package) {
-                    if ($package['name'] === 'shopware/core') {
+                    if ('shopware/core' === $package['name']) {
                         return $package['version'] ?? 'unknown';
                     }
                 }

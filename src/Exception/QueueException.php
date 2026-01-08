@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Exception;
 
@@ -22,7 +24,7 @@ class QueueException extends \RuntimeException
      */
     public static function truncateFailed(\Throwable $previous): self
     {
-        return new self('Failed to truncate queue table: ' . $previous->getMessage(), 0, $previous);
+        return new self('Failed to truncate queue table: '.$previous->getMessage(), 0, $previous);
     }
 
     /**
@@ -31,7 +33,7 @@ class QueueException extends \RuntimeException
     public static function enqueueFailed(string $entityType, string $entityId, \Throwable $previous): self
     {
         return new self(
-            "Failed to enqueue {$entityType} with ID {$entityId}: " . $previous->getMessage(),
+            "Failed to enqueue {$entityType} with ID {$entityId}: ".$previous->getMessage(),
             0,
             $previous
         );

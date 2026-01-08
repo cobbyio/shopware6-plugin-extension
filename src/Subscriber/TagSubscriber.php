@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Subscriber;
 
@@ -24,6 +26,6 @@ class TagSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX . 'enableTagEvents';
+        return CobbyPlugin::CONFIG_PREFIX.'enableTagEvents';
     }
 }

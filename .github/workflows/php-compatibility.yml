@@ -1,52 +1,25 @@
-name: PHP Compatibility Check
+name: Shopware Extension Validation
 
 on:
   pull_request:
     branches: [ main, master ]
 
-#jobs:
-#  php-compatibility:
-#    runs-on: ubuntu-latest
-#
-#    strategy:
-#      matrix:
-#        php-version: ['8.0', '8.1', '8.2', '8.3']
-#
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Setup PHP ${{ matrix.php-version }}
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          php-version: ${{ matrix.php-version }}
-#          tools: composer
-#
-#      - name: Check PHP syntax
-#        run: |
-#          echo "Checking PHP ${{ matrix.php-version }} compatibility..."
-#          for file in $(find src -name "*.php"); do
-#            php -l "$file"
-#          done
-#          echo "All PHP files are syntactically correct for PHP ${{ matrix.php-version }}"
-#
-#      - name: Validate composer.json
-#        run: composer validate
-
 jobs:
   cs:
+    name: Code Style
     if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run CS
+      - name: Run CS Check
         uses: shopware/github-actions/extension-verifier@main
         with:
           action: format
 
   check:
+    name: Shopware Compatibility
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -55,6 +28,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Run Check
         uses: shopware/github-actions/extension-verifier@main
         with:

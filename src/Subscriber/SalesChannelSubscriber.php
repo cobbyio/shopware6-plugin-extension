@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Subscriber;
 
@@ -13,6 +15,6 @@ class SalesChannelSubscriber extends SimpleEntitySubscriber
 
     protected function getConfigKey(): string
     {
-        return CobbyPlugin::CONFIG_PREFIX . 'enableSalesChannelEvents';
+        return CobbyPlugin::CONFIG_PREFIX.'enableSalesChannelEvents';
     }
 }
