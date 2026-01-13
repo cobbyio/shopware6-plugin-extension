@@ -1,7 +1,7 @@
 {
     "name": "cobby/webhook-plugin",
     "description": "Shopware 6 Plugin for Queue-Only Architecture - Tracks entity changes in queue for Cobby Automate",
-    "version": "1.0.51",
+    "version": "1.0.52",
     "type": "shopware-platform-plugin",
     "license": "MIT",
     "authors": [
@@ -10,6 +10,7 @@
         }
     ],
     "require": {
+        "php": ">=8.0",
         "shopware/core": "^6.4"
     },
     "extra": {
@@ -20,8 +21,16 @@
             "en-GB": "cobby"
         },
         "description": {
-            "de-DE": "Erfasst Entity-Änderungen in Queue mit vollständigen Daten für Cobby Automate (Queue-Only Architecture)",
-            "en-GB": "Tracks entity changes in queue with complete data for Cobby Automate (Queue-Only Architecture)"
+            "de-DE": "Cobby Plugin für Shopware 6: Erfasst alle Entity-Änderungen (Produkte, Kategorien, Eigenschaften) in einer Queue für die nahtlose Integration mit Cobby Automate PIM.",
+            "en-GB": "Cobby Plugin for Shopware 6: Tracks all entity changes (products, categories, properties) in a queue for seamless integration with Cobby Automate PIM system."
+        },
+        "manufacturerLink": {
+            "de-DE": "https://www.cobby.io",
+            "en-GB": "https://www.cobby.io"
+        },
+        "supportLink": {
+            "de-DE": "https://www.cobby.io/support",
+            "en-GB": "https://www.cobby.io/support"
         }
     },
     "autoload": {

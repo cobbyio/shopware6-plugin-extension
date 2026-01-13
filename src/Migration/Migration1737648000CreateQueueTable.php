@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Migration;
 
@@ -6,7 +8,7 @@ use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Migration\MigrationStep;
 
 /**
- * Migration: Create Queue Table (Metadata-Only Architecture)
+ * Migration: Create Queue Table (Metadata-Only Architecture).
  *
  * Creates the cobby_queue table for tracking entity changes.
  * Stores only metadata (entity_type, entity_id, operation).

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Service;
 
@@ -6,6 +8,7 @@ use CobbyPlugin\CobbyPlugin;
 use CobbyPlugin\Exception\QueueException;
 use CobbyPlugin\Util\SecurityTrait;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Api\Context\AdminApiSource;
 use Shopware\Core\Framework\Context;
@@ -13,7 +16,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 /**
- * Queue Service for Metadata-Only Architecture
+ * Queue Service for Metadata-Only Architecture.
  *
  * Manages the cobby_queue table which tracks entity changes.
  * Stores only metadata (entity_type, entity_id, operation).
@@ -31,11 +34,20 @@ class QueueTableService
 {
     use SecurityTrait;
 
+    private Connection $connection;
+
+    private LoggerInterface $logger;
+
+    private SystemConfigService $systemConfigService;
+
     public function __construct(
-        private readonly Connection $connection,
-        private readonly LoggerInterface $logger,
-        private readonly SystemConfigService $systemConfigService
+        Connection $connection,
+        LoggerInterface $logger,
+        SystemConfigService $systemConfigService,
     ) {
+        $this->connection = $connection;
+        $this->logger = $logger;
+        $this->systemConfigService = $systemConfigService;
     }
 
     /**
@@ -51,6 +63,7 @@ class QueueTableService
      * @param array $entityData IGNORED - kept for backwards compatibility
      * @param string $context Context where change occurred ('backend', 'api', 'frontend')
      * @param Context|null $shopwareContext Shopware context to extract admin user (optional)
+     *
      * @return int|null Created queue ID, or null on failure
      */
     public function enqueueWithData(
@@ -59,7 +72,7 @@ class QueueTableService
         string $operation,
         array $entityData, // IGNORED - for backwards compatibility only
         string $context = 'backend',
-        ?Context $shopwareContext = null
+        ?Context $shopwareContext = null,
     ): ?int {
         // Extract admin user or integration from context if available
         $userName = 'System';
@@ -77,7 +90,7 @@ class QueueTableService
                 }
             }
             // Then check user
-            else if ($source->getUserId()) {
+            elseif ($source->getUserId()) {
                 $userName = $source->getUserId();  // Admin user ID
             }
         }
@@ -145,19 +158,21 @@ class QueueTableService
                 // Cache for future requests
                 $this->systemConfigService->set(CobbyPlugin::CONFIG_PREFIX . 'cobbyIntegrationId', $result);
                 $this->logger->info('Cobby integration ID loaded and cached', ['integration_id' => $result]);
+
                 return $result;
             }
 
             // Not found - log warning once
             $this->logger->warning('Cobby integration not found in database', [
-                'hint' => 'Create integration with label "cobby" in Settings > System > Integrations'
+                'hint' => 'Create integration with label "cobby" in Settings > System > Integrations',
             ]);
-            return null;
 
+            return null;
         } catch (\Throwable $e) {
             $this->logger->error('Failed to load cobby integration ID', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return null;
         }
     }
@@ -171,6 +186,7 @@ class QueueTableService
      *
      * @param int $minQueueId Minimum queue ID to retrieve (exclusive)
      * @param int $pageSize Maximum number of entries to return (default: 100, max: 1000)
+     *
      * @return array Array of queue entries (metadata only)
      */
     public function getQueue(int $minQueueId = 0, int $pageSize = 100): array
@@ -199,8 +215,8 @@ class QueueTableService
                 'minQueueId' => $minQueueId,
                 'pageSize' => $pageSize,
             ], [
-                'minQueueId' => \PDO::PARAM_INT,
-                'pageSize' => \PDO::PARAM_INT,
+                'minQueueId' => ParameterType::INTEGER,
+                'pageSize' => ParameterType::INTEGER,
             ]);
 
             return $result;
@@ -247,8 +263,6 @@ class QueueTableService
      * - Starting fresh with ID 1
      *
      * WARNING: This deletes ALL queue entries!
-     *
-     * @return void
      */
     public function truncateQueue(): void
     {
@@ -262,5 +276,4 @@ class QueueTableService
             throw QueueException::truncateFailed($e);
         }
     }
-
 }

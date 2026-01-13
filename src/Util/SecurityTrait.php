@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Util;
 
@@ -25,6 +27,7 @@ trait SecurityTrait
      * - Colons (:) and digits for port numbers
      *
      * @param string $fallback Fallback value if HTTP_HOST is missing or invalid (default: 'localhost')
+     *
      * @return string Validated HTTP_HOST or fallback
      */
     private function getSafeHttpHost(string $fallback = 'localhost'): string
@@ -50,7 +53,7 @@ trait SecurityTrait
         }
 
         // Additional validation: check host length (max 253 characters for domain names)
-        if (strlen($host) > 253) {
+        if (\strlen($host) > 253) {
             return $fallback;
         }
 
@@ -65,12 +68,12 @@ trait SecurityTrait
     private function getShopwareVersion(): string
     {
         // Try to get Shopware version from Kernel
-        if (defined('\Shopware\Core\Kernel::SHOPWARE_FALLBACK_VERSION')) {
+        if (\defined('\Shopware\Core\Kernel::SHOPWARE_FALLBACK_VERSION')) {
             return \Shopware\Core\Kernel::SHOPWARE_FALLBACK_VERSION;
         }
 
         // Fallback: Try composer.lock
-        $composerLockPath = dirname(__DIR__, 5) . '/composer.lock';
+        $composerLockPath = \dirname(__DIR__, 5) . '/composer.lock';
         if (file_exists($composerLockPath)) {
             $composerLock = json_decode(file_get_contents($composerLockPath), true);
             if (isset($composerLock['packages'])) {

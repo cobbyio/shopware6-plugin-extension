@@ -1,0 +1,36 @@
+name: Shopware Extension Validation
+
+on:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  cs:
+    name: Code Style
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run CS Check
+        uses: shopware/github-actions/extension-verifier@main
+        with:
+          action: format
+
+  check:
+    name: Shopware Compatibility
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        version-selection: [ 'lowest', 'highest' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Check
+        uses: shopware/github-actions/extension-verifier@main
+        with:
+          action: check
+          check-against: ${{ matrix.version-selection }}

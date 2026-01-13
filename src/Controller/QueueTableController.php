@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace CobbyPlugin\Controller;
 
@@ -9,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * QueueTable API Controller for Cobby Connector (Metadata-Only Architecture)
+ * QueueTable API Controller for Cobby Connector (Metadata-Only Architecture).
  *
  * Provides REST endpoints for queue management:
  * - Get queue entries (metadata only: entity_type, entity_id, operation)
@@ -24,9 +26,12 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class QueueTableController extends AbstractController
 {
+    private QueueTableService $queueService;
+
     public function __construct(
-        private readonly QueueTableService $queueService
+        QueueTableService $queueService,
     ) {
+        $this->queueService = $queueService;
     }
 
     /**
@@ -67,8 +72,8 @@ class QueueTableController extends AbstractController
     #[Route(path: '/api/cobby-queue', name: 'api.action.cobby.queue.get', methods: ['GET'], defaults: ['_routeScope' => ['api']])]
     public function list(Request $request): JsonResponse
     {
-        $minQueueId = (int) $request->query->get('minQueueId', 0);
-        $pageSize = (int) $request->query->get('pageSize', 100);
+        $minQueueId = (int) $request->query->get('minQueueId', '0');
+        $pageSize = (int) $request->query->get('pageSize', '100');
 
         // Limit page size to prevent performance issues
         if ($pageSize > 1000) {
@@ -84,7 +89,7 @@ class QueueTableController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'data' => $queue,
-            'count' => count($queue),
+            'count' => \count($queue),
         ]);
     }
 

@@ -314,7 +314,7 @@ tail -f /var/www/html/var/log/dev.log
 ## Requirements
 
 - Shopware 6.4 or higher
-- PHP 7.4 or higher
+- PHP 8.0 or higher
 - Configured webhook endpoint that responds within 5 seconds
 
 ## Troubleshooting
