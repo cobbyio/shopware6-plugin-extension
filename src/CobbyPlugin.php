@@ -187,6 +187,7 @@ class CobbyPlugin extends Plugin
                 'custom_field:read',
                 'delivery_time:read',
                 'media:create',
+                'media:delete',
                 'media:read',
                 'media:update',
                 'media_default_folder:read',
