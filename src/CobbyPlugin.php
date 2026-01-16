@@ -11,6 +11,7 @@ use Shopware\Core\Framework\Plugin\Context\ActivateContext;
 use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
+use Shopware\Core\Framework\Plugin\Context\UpdateContext;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\Config\FileLocator;
@@ -84,6 +85,12 @@ class CobbyPlugin extends Plugin
     {
         $this->sendLifecycleNotification('deactivated');
         parent::deactivate($context);
+    }
+
+    public function update(UpdateContext $context): void
+    {
+        parent::update($context);
+        $this->createCobbyAclRole();
     }
 
     /**
