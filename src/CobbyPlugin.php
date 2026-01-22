@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class CobbyPlugin extends Plugin
 {
-    public const PLUGIN_VERSION = '1.0.54';
+    public const PLUGIN_VERSION = '1.0.55';
     public const CONFIG_PREFIX = 'cobby.config.';
     private const COBBY_ROLE = 'cobby_role';
 
