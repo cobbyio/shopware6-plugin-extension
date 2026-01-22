@@ -131,6 +131,7 @@ class CobbyPlugin extends Plugin
             'enableUnitEvents' => true,
             'enableDeliveryTimeEvents' => true,
             'enableTagEvents' => true,
+            'enableMediaEvents' => true,
             'enableDebugLogging' => false,
         ];
 
