@@ -276,4 +276,56 @@ class QueueTableService
             throw QueueException::truncateFailed($e);
         }
     }
+
+    /**
+     * Get product ID associated with a product_media record.
+     *
+     * @param string $productMediaId The product_media UUID (hex)
+     *
+     * @return string|null Product ID (hex) or null if not found
+     */
+    public function getProductIdByProductMediaId(string $productMediaId): ?string
+    {
+        try {
+            $result = $this->connection->fetchOne(
+                'SELECT LOWER(HEX(product_id)) FROM product_media WHERE id = UNHEX(:id)',
+                ['id' => $productMediaId]
+            );
+
+            return $result ?: null;
+        } catch (\Throwable $e) {
+            $this->logger->error('Failed to get product ID by product_media ID', [
+                'productMediaId' => $productMediaId,
+                'error' => $e->getMessage(),
+            ]);
+
+            return null;
+        }
+    }
+
+    /**
+     * Get product IDs associated with a media ID via product_media table.
+     *
+     * @param string $mediaId The media UUID (hex)
+     *
+     * @return string[] Array of product IDs (hex)
+     */
+    public function getProductIdsByMediaId(string $mediaId): array
+    {
+        try {
+            $result = $this->connection->fetchFirstColumn(
+                'SELECT LOWER(HEX(product_id)) FROM product_media WHERE media_id = UNHEX(:mediaId)',
+                ['mediaId' => $mediaId]
+            );
+
+            return $result;
+        } catch (\Throwable $e) {
+            $this->logger->error('Failed to get product IDs by media ID', [
+                'mediaId' => $mediaId,
+                'error' => $e->getMessage(),
+            ]);
+
+            return [];
+        }
+    }
 }
