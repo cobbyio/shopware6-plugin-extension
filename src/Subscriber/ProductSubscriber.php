@@ -99,8 +99,16 @@ class ProductSubscriber extends AbstractWebhookSubscriber
             $contextType = $this->detectContextType($event->getContext());
             $parentIds = [];
 
+            $productMediaIds = [];
+
             foreach ($event->getWriteResults() as $writeResult) {
                 $payload = $writeResult->getPayload();
+                $productMediaId = $this->extractPrimaryKey($writeResult->getPrimaryKey());
+
+                // Track product_media ID for its own queue event
+                if ($productMediaId) {
+                    $productMediaIds[] = $productMediaId;
+                }
 
                 // Try payload first (available for direct API writes)
                 if (isset($payload['productId'])) {
@@ -110,7 +118,6 @@ class ProductSubscriber extends AbstractWebhookSubscriber
                 }
 
                 // Fallback: Query DB for productId using product_media ID
-                $productMediaId = $this->extractPrimaryKey($writeResult->getPrimaryKey());
                 if ($productMediaId) {
                     $productId = $this->queueService->getProductIdByProductMediaId($productMediaId);
                     if ($productId) {
@@ -119,6 +126,12 @@ class ProductSubscriber extends AbstractWebhookSubscriber
                 }
             }
 
+            // Enqueue product_media events
+            foreach (array_unique($productMediaIds) as $productMediaId) {
+                $this->enqueueMetadataOnly('product_media', $productMediaId, $event instanceof EntityDeletedEvent ? 'delete' : 'update', $contextType, $event->getContext());
+            }
+
+            // Enqueue parent product update events
             foreach (array_unique($parentIds) as $parentId) {
                 $this->enqueueMetadataOnly('product', $parentId, 'update', $contextType, $event->getContext());
             }

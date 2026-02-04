@@ -33,12 +33,10 @@ class MediaSubscriber extends AbstractWebhookSubscriber
                     continue;
                 }
 
-                $productIds = $this->queueService->getProductIdsByMediaId($mediaId);
-                if (empty($productIds)) {
-                    continue;
-                }
-
+                // Always enqueue media event, even if no products are linked yet
                 $this->enqueueMetadataOnly('media', $mediaId, $writeResult->getOperation(), $contextType, $event->getContext());
+
+                $productIds = $this->queueService->getProductIdsByMediaId($mediaId);
 
                 foreach ($productIds as $productId) {
                     $this->enqueueMetadataOnly('product', $productId, 'update', $contextType, $event->getContext());
@@ -66,12 +64,10 @@ class MediaSubscriber extends AbstractWebhookSubscriber
                     continue;
                 }
 
-                $productIds = $this->queueService->getProductIdsByMediaId($mediaId);
-                if (empty($productIds)) {
-                    continue;
-                }
-
+                // Always enqueue media event, even if no products are linked yet
                 $this->enqueueMetadataOnly('media', $mediaId, 'delete', $contextType, $event->getContext());
+
+                $productIds = $this->queueService->getProductIdsByMediaId($mediaId);
 
                 foreach ($productIds as $productId) {
                     $this->enqueueMetadataOnly('product', $productId, 'update', $contextType, $event->getContext());
