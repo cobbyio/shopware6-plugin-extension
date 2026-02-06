@@ -16,7 +16,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class CobbyPlugin extends Plugin
@@ -39,8 +39,8 @@ class CobbyPlugin extends Plugin
     {
         parent::build($container);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.php');
     }
 
     public function configureRoutes(RoutingConfigurator $routes, string $environment): void
