@@ -61,12 +61,12 @@ class ProductSubscriber extends AbstractWebhookSubscriber
 
     public function onProductMediaWritten(EntityWrittenEvent $event): void
     {
-        $this->handleParentUpdateEvent($event, 'product', 'productId');
+        $this->handleProductMediaEvent($event);
     }
 
     public function onProductMediaDeleted(EntityDeletedEvent $event): void
     {
-        $this->handleParentUpdateEvent($event, 'product', 'productId');
+        $this->handleProductMediaEvent($event);
     }
 
     public function onProductCategoryWritten(EntityWrittenEvent $event): void
@@ -82,5 +82,63 @@ class ProductSubscriber extends AbstractWebhookSubscriber
     protected function getConfigKey(): string
     {
         return CobbyPlugin::CONFIG_PREFIX . 'enableProductEvents';
+    }
+
+    /**
+     * Handle product_media events with DB query fallback.
+     * Shopware's write result payload for product_media often doesn't contain productId,
+     * especially for cascaded writes and delete events.
+     */
+    private function handleProductMediaEvent(EntityWrittenEvent|EntityDeletedEvent $event): void
+    {
+        if (!$this->isEnabled()) {
+            return;
+        }
+
+        try {
+            $contextType = $this->detectContextType($event->getContext());
+            $parentIds = [];
+
+            $productMediaIds = [];
+
+            foreach ($event->getWriteResults() as $writeResult) {
+                $payload = $writeResult->getPayload();
+                $productMediaId = $this->extractPrimaryKey($writeResult->getPrimaryKey());
+
+                // Track product_media ID for its own queue event
+                if ($productMediaId) {
+                    $productMediaIds[] = $productMediaId;
+                }
+
+                // Try payload first (available for direct API writes)
+                if (isset($payload['productId'])) {
+                    $parentIds[] = $payload['productId'];
+
+                    continue;
+                }
+
+                // Fallback: Query DB for productId using product_media ID
+                if ($productMediaId) {
+                    $productId = $this->queueService->getProductIdByProductMediaId($productMediaId);
+                    if ($productId) {
+                        $parentIds[] = $productId;
+                    }
+                }
+            }
+
+            // Enqueue product_media events
+            foreach (array_unique($productMediaIds) as $productMediaId) {
+                $this->enqueueMetadataOnly('product_media', $productMediaId, $event instanceof EntityDeletedEvent ? 'delete' : 'update', $contextType, $event->getContext());
+            }
+
+            // Enqueue parent product update events
+            foreach (array_unique($parentIds) as $parentId) {
+                $this->enqueueMetadataOnly('product', $parentId, 'update', $contextType, $event->getContext());
+            }
+        } catch (\Throwable $e) {
+            $this->logger->error('Error in product media event', [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

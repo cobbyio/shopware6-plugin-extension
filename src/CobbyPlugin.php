@@ -14,14 +14,11 @@ use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 use Shopware\Core\Framework\Plugin\Context\UpdateContext;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class CobbyPlugin extends Plugin
 {
-    public const PLUGIN_VERSION = '1.0.54';
+    public const PLUGIN_VERSION = '1.0.55';
     public const CONFIG_PREFIX = 'cobby.config.';
     private const COBBY_ROLE = 'cobby_role';
 
@@ -33,14 +30,6 @@ class CobbyPlugin extends Plugin
     public function getMigrationPath(): string
     {
         return __DIR__ . '/Migration';
-    }
-
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
     }
 
     public function configureRoutes(RoutingConfigurator $routes, string $environment): void
@@ -131,6 +120,7 @@ class CobbyPlugin extends Plugin
             'enableUnitEvents' => true,
             'enableDeliveryTimeEvents' => true,
             'enableTagEvents' => true,
+            'enableMediaEvents' => true,
             'enableDebugLogging' => false,
         ];
 
