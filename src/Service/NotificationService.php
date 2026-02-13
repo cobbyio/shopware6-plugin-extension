@@ -19,8 +19,8 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
  * reliable in containerized environments.
  *
  * URL SCHEMA:
- * - Status notifications: baseUrl (full path including workspace)
- * - Webhooks: baseUrl/webhook
+ * - Status notifications: baseUrl with version segment (e.g., .../shopware/v1-0-55/extension)
+ * - Webhooks: baseUrl with version segment + /webhook (e.g., .../shopware/v1-0-55/extension/webhook)
  *
  * CONFIGURATION:
  * - baseUrl: Full extension URL (e.g., https://automate.cobby.io/workspaces/{id}/shopware/extension)
@@ -65,6 +65,10 @@ class NotificationService
         $webhookTimeout = $timeout ?: self::DEFAULT_TIMEOUT;
 
         if (empty($webhookUrl)) {
+            $this->logger->warning('Webhook URL is empty, cannot send', [
+                'event' => $eventName,
+            ]);
+
             return [
                 'success' => false,
                 'error' => 'No webhook URL configured',
@@ -215,17 +219,29 @@ class NotificationService
     }
 
     /**
-     * Returns the extension URL (baseUrl already contains full path).
+     * Returns the extension URL with version segment inserted after /shopware/.
      */
     private function buildExtensionUrl(): ?string
     {
-        $baseUrl = $this->getBaseUrl();
+        $url = $this->buildVersionedUrl($this->getBaseUrl());
 
+        return $url ? rtrim($url, '/') : null;
+    }
+
+    /**
+     * Inserts the plugin version segment after /shopware/ in the base URL.
+     * Example: .../shopware/extension → .../shopware/v1-0-55/extension
+     */
+    private function buildVersionedUrl(?string $baseUrl): ?string
+    {
         if (empty($baseUrl)) {
             return null;
         }
 
-        return rtrim($baseUrl, '/');
+        $version = 'v' . str_replace('.', '-', CobbyPlugin::PLUGIN_VERSION);
+        $url = preg_replace('#/shopware/#', '/shopware/' . $version . '/', rtrim($baseUrl, '/') . '/', 1);
+
+        return $url;
     }
 
     private function buildWebhookUrl(): ?string
