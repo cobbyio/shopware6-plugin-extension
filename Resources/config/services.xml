@@ -38,6 +38,11 @@
             <tag name="controller.service_arguments"/>
         </service>
 
+        <!-- Version Controller (returns plugin version) -->
+        <service id="CobbyPlugin\Controller\VersionController" public="true">
+            <tag name="controller.service_arguments"/>
+        </service>
+
         <!-- ========================================
              EVENT SUBSCRIBERS (auto-registered via prototype)
              ======================================== -->
