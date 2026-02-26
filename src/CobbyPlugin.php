@@ -25,6 +25,11 @@ class CobbyPlugin extends Plugin
     public const CONFIG_PREFIX = 'cobby.config.';
     private const COBBY_ROLE = 'cobby_role';
 
+    public static function getExternalServiceVersion(): string
+    {
+        return 'v' . str_replace('.', '_', self::PLUGIN_VERSION);
+    }
+
     public function getMigrationNamespace(): string
     {
         return 'CobbyPlugin\\Migration';

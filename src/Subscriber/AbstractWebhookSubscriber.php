@@ -192,7 +192,7 @@ abstract class AbstractWebhookSubscriber implements EventSubscriberInterface
                     'operation' => $operation,
                     'queueId' => $queueId,
                     'timestamp' => time(),
-                    'pluginVersion' => CobbyPlugin::PLUGIN_VERSION,
+                    'pluginVersion' => CobbyPlugin::getExternalServiceVersion(),
                 ];
 
                 $this->notificationService->sendWebhook($eventName, $payload);

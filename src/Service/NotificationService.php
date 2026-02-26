@@ -19,8 +19,8 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
  * reliable in containerized environments.
  *
  * URL SCHEMA:
- * - Status notifications: baseUrl with version segment (e.g., .../shopware/v1-0-55/extension)
- * - Webhooks: baseUrl with version segment + /webhook (e.g., .../shopware/v1-0-55/extension/webhook)
+ * - Status notifications: baseUrl with version segment (e.g., .../shopware/v1_0_55/extension)
+ * - Webhooks: baseUrl with version segment + /webhook (e.g., .../shopware/v1_0_55/extension/webhook)
  *
  * CONFIGURATION:
  * - baseUrl: Full extension URL (e.g., https://automate.cobby.io/workspaces/{id}/shopware/extension)
@@ -206,7 +206,7 @@ class NotificationService
         $data = [
             'status' => $status,
             'shopUrl' => $this->getSafeHttpHost(),
-            'pluginVersion' => CobbyPlugin::PLUGIN_VERSION,
+            'pluginVersion' => CobbyPlugin::getExternalServiceVersion(),
             'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
         ];
 
@@ -230,7 +230,7 @@ class NotificationService
 
     /**
      * Inserts the plugin version segment after /shopware/ in the base URL.
-     * Example: .../shopware/extension → .../shopware/v1-0-55/extension
+     * Example: .../shopware/extension → .../shopware/v1_0_55/extension
      */
     private function buildVersionedUrl(?string $baseUrl): ?string
     {
@@ -238,7 +238,7 @@ class NotificationService
             return null;
         }
 
-        $version = 'v' . str_replace('.', '-', CobbyPlugin::PLUGIN_VERSION);
+        $version = CobbyPlugin::getExternalServiceVersion();
         $url = preg_replace('#/shopware/#', '/shopware/' . $version . '/', rtrim($baseUrl, '/') . '/', 1);
 
         return $url;
