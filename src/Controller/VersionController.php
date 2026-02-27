@@ -14,7 +14,6 @@ class VersionController
     public function getVersion(): JsonResponse
     {
         return new JsonResponse([
-            'success' => true,
             'version' => CobbyPlugin::PLUGIN_VERSION,
         ]);
     }
